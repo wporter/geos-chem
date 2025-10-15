@@ -491,12 +491,6 @@ CONTAINS
                I          = I,                                               &
                J          = J,                                               &
                L          = L,                                               &
-               id_CH4     = id_CH4,                                          &
-               id_CO      = id_CO,                                           &
-               id_CO2     = id_CO2,                                          &
-               xnumol_CH4 = xnumol_CH4,                                      &
-               xnumol_CO  = xnumol_CO,                                       &
-               xnumol_CO2 = xnumol_CO2,                                      &
                State_Met  = State_Met,                                       &
                State_Chm  = State_Chm                                       )
 
@@ -569,12 +563,6 @@ CONTAINS
                I            = I,                                             &
                J            = J,                                             &
                L            = L,                                             &
-               id_CH4       = id_CH4,                                        &
-               id_CO        = id_CO,                                         &
-               id_CO2       = id_CO2,                                        &
-               xnumol_CO    = xnumol_CO,                                     &
-               xnumol_CH4   = xnumol_CH4,                                    &
-               xnumol_CO2   = xnumol_CO2,                                    &
                State_Chm    = State_Chm,                                     &
                State_Met    = State_Met                                     )
 
@@ -870,6 +858,7 @@ CONTAINS
 !
 ! !USES:
 !
+    USE carbon_Funcs,   ONLY : carbon_InitCarbonKPPFuncs
     USE gckpp_Global,   ONLY : SR_MW, HENRY_CR, HENRY_K0
     USE ErrCode_Mod
     USE Input_Opt_Mod,  ONLY : OptInput
@@ -900,7 +889,7 @@ CONTAINS
 ! !LOCAL VARIABLES:
 !
     ! Scalars
-    INTEGER            :: KppId,  N
+    INTEGER            :: KppId,  N, numJacobianTracers
 
     ! Strings
     CHARACTER(LEN=255) :: errMsg
@@ -945,6 +934,24 @@ CONTAINS
        xnumol_OH  = AVO / ( State_Chm%SpcData(id_OH )%Info%MW_g * 1.0e-3_fp )
 
     !========================================================================
+    ! Initialize module variables in carbon_Funcs (in KPP)
+    !========================================================================
+    IF ( (id_CH4 > 0) .OR. (id_CO > 0) ) THEN
+       numJacobianTracers = 5 ! ewl todo: get this from geoschem_config.yml, Input_Opt
+       IF ( numJacobianTracers > 0 ) THEN
+          CALL carbon_InitCarbonKPPFuncs( xnumol_CH4, xnumol_CO, xnumol_CO2, &
+               numJacobianTracers, RC )
+       ELSE
+          CALL carbon_InitCarbonKPPFuncs( xnumol_CH4, xnumol_CO, xnumol_CO2, RC )
+       ENDIF
+       IF ( RC /= GC_SUCCESS ) THEN
+          errMsg = 'Cannot initialize module variables in carbon_InitCarbonChem'
+          CALL GC_Error( errMsg, RC, thisLoc )
+          RETURN
+       ENDIF
+    ENDIF
+
+    !========================================================================
     ! Initialize variables for COchemistry
     !========================================================================
     ALLOCATE( sumOfCosSza( State_Grid%NX, State_Grid%NY ), STAT=RC )
@@ -972,6 +979,7 @@ CONTAINS
 ! !USES:
 !
     USE ErrCode_Mod
+    USE carbon_Funcs,   ONLY : carbon_CleanupCarbonKPPFuncs
 !
 ! !OUTPUT PARAMETERS:
 !
@@ -990,7 +998,10 @@ CONTAINS
     IF ( ALLOCATED( sumOfCosSza ) ) THEN
        DEALLOCATE( sumOfCosSza, STAT=RC )
        CALL GC_CheckVar( 'carbon_gases_mod.F90:sumOfCosSza', 2, RC )
-       RETURN
+    ENDIF
+
+    IF ( (id_CH4 > 0) .AND. (numJacobianTracers > 0) ) THEN
+       CALL carbon_CleanupCarbonKPPFuncs( RC )
     ENDIF
 
   END SUBROUTINE Cleanup_Carbon_Gases
