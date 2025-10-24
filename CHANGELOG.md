@@ -22,6 +22,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Added ExtData2G yaml configuration file for GCHP transport tracer simulation
 - Added `${RUNDIR_READ_RESTART_AS_REAL8}` to GEOS-Chem Classic  `geoschem_config.yml` template files
 - Added error trap to routine `Get_GC_Restart` to halt simulations that use `read_restart_as_real8: true` with a reduced vertical grid
+- Added `State_Met%MaxChemLev` and `State_Met%MaxStratLev` integer fields
+- Added `Init_MaxChemLev` routine in `GeosUtil/pressure_mod.F90`, called from routine `Init_Pressure`
+- Added `State_Met` argument to routines `Init_CloudJ`, `Init_Photolysis`, `Set_Clim_Profiles`, `GC_Init_Extra`, `Init_Pressure`, `Init_Mercury`, `Init_Sulfate`
 
 ### Changed
 - Update termite CH4 emissions to the CAMS-GLOB-TERM_v1.1 product
@@ -35,6 +38,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Renamed `Carbon` collection to `ProdLoss` collection in GCClassic and GCHP `HISTORY.rc.carbon` templates
 - Updated GitHub Action `stale@v5` to `stale@v10` in order to avoid deprecation warnings
 - Moved logic to determine whether we read the restart file as `REAL*8` from `run/shared/setupConfigFiles.sh` to `run/GCClassic/createRunDir.sh`
+- Simplified the logic where `isGMAO` and `State_Grid%NativeNZ` are computed in `GeosUtil/gc_grid_mod.F90`
+- Changed definition of `State_Grid%MaxChemLev` and `State_Grid%MaxStratLev` to be the 1 hPa level
 
 ### Fixed
 - Fixed incorrect unit conversion from v/v -> molec/cm3 in `planeflight_mod.F90`
@@ -48,6 +53,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Retired Fung termite and soil absorption emission options from carbon simulation
 - Removed `GeosUtil/grid_registry_mod.F90`.
 - Removed `OHconcAfterChem` from GCClassic and GCHP `HISTORY.rc.carbon` templates, as OH is fixed during the simulation
+- Removed `State_Grid%MaxChemLev`, `State_Grid%MaxStratLev`, and `State_Grid%MaxTropLev` fields
 
 ## [14.7.0] - 2026-02-05
 ### Added
