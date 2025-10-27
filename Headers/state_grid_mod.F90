@@ -101,17 +101,6 @@ MODULE State_Grid_Mod
      REAL(f8)           :: P0               ! Reference pressure (hPa)
      REAL(f8), POINTER  :: Time       (:  ) ! Time
 
-     !----------------------------------------
-     ! Grid fields computed in gc_grid_mod.F90
-     !----------------------------------------
-     INTEGER            :: GlobalNX    ! NX on the global grid
-     INTEGER            :: GlobalNY    ! NY on the global grid
-     INTEGER            :: NativeNZ    ! NZ on the native-resolution grid
-     INTEGER            :: XMinOffset  ! X offset from global grid
-     INTEGER            :: XMaxOffset  ! X offset from global grid
-     INTEGER            :: YMinOffset  ! Y offset from global grid
-     INTEGER            :: YMaxOffset  ! Y offset from global grid
-
 #ifdef LUO_WETDEP
      !----------------------------------------------------------------------
      ! Fields needed for the Luo et al wet deposition scheme
@@ -309,7 +298,6 @@ CONTAINS
     State_Grid%DYWE_M         => NULL()
 #endif
 
->>>>>>> f9c99497c (Now compute MaxChemLev and MaxStratLev as the 1 hPa level)
 #if defined( MODEL_GEOS )
     State_Grid%PredictorIsActive     =  .FALSE.
 #endif

@@ -25,6 +25,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Added `State_Met%MaxChemLev` and `State_Met%MaxStratLev` integer fields
 - Added `Init_MaxChemLev` routine in `GeosUtil/pressure_mod.F90`, called from routine `Init_Pressure`
 - Added `State_Met` argument to routines `Init_CloudJ`, `Init_Photolysis`, `Set_Clim_Profiles`, `GC_Init_Extra`, `Init_Pressure`, `Init_Mercury`, `Init_Sulfate`
+- Added `State_Met%MaxChemLev` and `State_Met%MaxStratLev` integer fields
+- Added `Init_MaxChemLev` routine in `GeosUtil/pressure_mod.F90`, called from routine `Init_Pressure`
+- Added `State_Met` argument to routines `Init_CloudJ`, `Init_Photolysis`, `Set_Clim_Profiles`, `GC_Init_Extra`, `Init_Pressure`, `Init_Mercury`, `Init_Sulfate`, and `Set_Prof_FJX`
 
 ### Changed
 - Update termite CH4 emissions to the CAMS-GLOB-TERM_v1.1 product
@@ -54,6 +57,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Removed `GeosUtil/grid_registry_mod.F90`.
 - Removed `OHconcAfterChem` from GCClassic and GCHP `HISTORY.rc.carbon` templates, as OH is fixed during the simulation
 - Removed `State_Grid%MaxChemLev`, `State_Grid%MaxStratLev`, and `State_Grid%MaxTropLev` fields
+- Removed `State_Grid%MaxChemLev`, `State_Grid%MaxStratLev`, and `State_Grid%MaxTropLev` fields
+- Removed `State_Grid` argument from `Set_Prof_FJX` routine
 
 ## [14.7.0] - 2026-02-05
 ### Added

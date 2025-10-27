@@ -125,7 +125,7 @@ CONTAINS
           is_GMAO             = .TRUE.
           State_Grid%NativeNZ = 72
 
-       CASE( 'ModelE2.1' )
+       CASE( 'MODELE2.1' )
           is_GMAO             = .FALSE.
           State_Grid%NativeNZ = 102
 
