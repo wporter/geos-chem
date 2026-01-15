@@ -4,6 +4,11 @@ This file documents all notable changes to the GEOS-Chem repository starting in 
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] - TBD
+### Fixed
+- Fixed incorrect dust species names in `run/GCClassic/HEMCO_Diagn.rc.templates/HEMCO_Diagn.rc.fullchem.onlineE` 
+- Fixed incorrect extension number for `InvDustL23M` entries in `run/GCHP/HEMCO_Diagn.rc.templates/HEMCO_Diagn.rc.fullchem`
+
 ## [14.7.0] - 2026-02-05
 ### Added
 - Added entries for FINNv25 biomass burning emissions to template HEMCO configuration files
