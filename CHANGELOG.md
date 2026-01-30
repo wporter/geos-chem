@@ -19,9 +19,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Changed several `State_Grid` fields from `fp` to `f8` precision. (In practice both are `REAL*8` but this makes it more explicit.)
 - Moved the population of coordinate variables for History netCDF  output from `grid_registry_mod.F90` to `history_mod.F90` (in routine `History_InitCoordVars`)
 - Updated `run/GCHP/setCommonRunSettings.template` to disable the HEMCO PARANOx extension for C360 or C720 grids
+- Updated `createRunDir.sh` scripts for GC-Classic and GCHP to turn on offline bulk seasalt emissions and bulk dust emissions in TOMAS simulations
 
 ### Fixed
 - Fixed incorrect unit conversion from v/v -> molec/cm3 in `planeflight_mod.F90`
+- Fixed typo in the call to `Finalize` for the
+  `State_Diag%ProdOCPIfromOCPO` diagnostic array
 
 ### Removed
 - Removed `ARCTAS_SHIP`, `CORBETT_SHIP`, `ICOADS_SHIP` from `HEMCO_Config.rc` template files
