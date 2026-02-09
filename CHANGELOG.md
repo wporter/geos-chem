@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [14.6.3] - 2026-01-14
 ### Added
+- TL Changed the SAFETY in /GeosCore/wetscav_mod.F90 procedure following comments by yantosca (https://github.com/geoschem/geos-chem/pull/3164/changes)
 - TL Added a way for SAFETY in /GeosCore/wetscav_mod.F90 to set anything that is small or negative to a zero when it finds a case following suggestion by yantosca (https://github.com/geoschem/geos-chem/issues/501#) 
 Added for errors like: https://github.com/geoschem/geos-chem/issues/501#, https://github.com/geoschem/geos-chem/issues/259, https://github.com/geoschem/geos-chem/issues/2991, https://github.com/geoschem/geos-chem/issues/2663, https://github.com/geoschem/geos-chem/issues/259, https://github.com/geoschem/geos-chem/issues/610, https://github.com/geoschem/geos-chem/issues/759, https://github.com/geoschem/geos-chem/issues/2440, and the like 
 

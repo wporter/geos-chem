@@ -5449,24 +5449,23 @@ CONTAINS
 !
     ! Strings
     CHARACTER(LEN=255) :: ErrMsg, ThisLoc
-    REAL(fp)                      :: BAD !TL Added: 9/29/25: WetDep-Safety-Update
-
+   
     !======================================================================
     ! SAFETY begins here!
     !======================================================================
 
     ! TL Added: 9/29/25: Start WetDep-Safety-Update 
     ! TL Added: 9/29/25: Following suggestion by yantosca (https://github.com/geoschem/geos-chem/issues/501)
-    ! TL Added: 9/29/25: To see if actually entering Safety
-    PRINT*, '>>> Entering SAFETY for species ', N
-    CALL FLUSH(6)
-
-    BAD = 0.0
+    ! TL Added: 2/9/26: Removed Print and Flush Statements and BAD following comment by yantosca (https://github.com/geoschem/geos-chem/pull/3164/changes)
+    
+    
     ! TL Added: 9/29/25: WetDep-Safety-Update
-    IF ( MINVAL(Spc) < 0.0_fp) THEN
-       BAD = 1.0
+    IF ( MINVAL(Spc) < 0.0_fp ) THEN
+       !TL Added: 2/9/26: Wrapped Print in OMP CRITICAL following comment by yantosca (https://github.com/geoschem/geos-chem/pull/3164/changes)
+       !$OMP CRITICAL
        PRINT*, 'Species', N, 'has a negative value',  &
                   'at ', I, J, L, 'set to zero'
+       !$OMP END CRITICAL
     ENDIF
 
     WHERE ( Spc < 0.0_fp )
