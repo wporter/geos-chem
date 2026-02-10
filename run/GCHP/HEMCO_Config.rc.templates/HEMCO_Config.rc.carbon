@@ -115,7 +115,7 @@ Mask fractions:              false
 # ..... Ship emissions ...............
     --> SHIP                   :       true
     --> CEDS_01x01_SHIP        :       true     # 1980-2019
-    --> ICOADS_SHIP            :       false    # 2004
+    --> HTAP_SHIP              :       false    # 2000-2018
 #------ OCS FLUX DATA ---------------------------------------------------------
     --> OCS_ANTHRO_FLUX        :       true     # 2012-2016
     --> OCS_BIOMASS_FLUX       :       true     # 2012-2016
@@ -758,9 +758,6 @@ Mask fractions:              false
 #     zero.
 #==============================================================================
 (((SHIP
-(((ICOADS_SHIP
-0  ICOADS_SHIP_CO  $ROOT/ICOADS_SHIP/v2014-07/ICOADS.generic.1x1.nc CO 2002/1-12/1/0 C xy kg/m2/s  CO 6/10 10 2
-)))ICOADS_SHIP
 
 (((HTAP_SHIP
 0 HTAP_SHIP_CO  $ROOT/HTAP/v2015-03/EDGAR_HTAP_CO_SHIPS.generic.01x01.nc CO 2008-2010/1/1/0 C xy kg/m2/s CO 506/528 10 4
