@@ -18,6 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Moved coordinate variables for GC-Classic History netCDF files from `GeosUtil/grid_registry_mod.F90` to the `State_Grid` object
 - Changed several `State_Grid` fields from `fp` to `f8` precision. (In practice both are `REAL*8` but this makes it more explicit.)
 - Moved the population of coordinate variables for History netCDF  output from `grid_registry_mod.F90` to `history_mod.F90` (in routine `History_InitCoordVars`)
+- Updated `run/GCHP/setCommonRunSettings.template` to disable the HEMCO PARANOx extension for C360 or C720 grids
 
 ### Fixed
 - Fixed incorrect unit conversion from v/v -> molec/cm3 in `planeflight_mod.F90`

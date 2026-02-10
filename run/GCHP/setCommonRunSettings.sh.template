@@ -967,6 +967,17 @@ if [[ ${soilExt} != "missing" ]]; then
     fi
 fi
 
+# Deactivate PARANOx in HEMCO_Config.rc for C360 or C720 grids
+# but activate it for all other cubed-sphere resolutions
+paranoxExt=$(grep "102.*ParaNOx"  HEMCO_Config.rc || echo "missing")
+if [[ "x${paranoxExt}" != "xmissing" ]]; then
+    if [[ "x${CS_RES}" == "x360" || "x${CS_RES}" == "x720" ]]; then
+        sed -i -E '/ParaNOx/s/: (on |off)/: off/' HEMCO_Config.rc
+    else
+        sed -i -E '/ParaNOx/s/: (on |off)/: on /' HEMCO_Config.rc
+    fi
+fi
+
 #### Done
 print_msg " "
 print_msg "setCommonRunSettings.sh done"
