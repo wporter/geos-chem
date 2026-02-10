@@ -8,8 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Added
 - Added `HTAP_SHIP` toggle in `HEMCO_Config.rc.carbon` templates for GC-Classic and GCHP
 
+### Changed
+- Update termite CH4 emissions to the CAMS-GLOB-TERM_v1.1 product
+
 ### Removed
 - Removed `ARCTAS_SHIP`, `CORBETT_SHIP`, `ICOADS_SHIP` from `HEMCO_Config.rc` template files
+- Retired Fung termite and soil absorption emission options from carbon simulation
 
 ## [14.7.0] - 2026-02-05
 ### Added
