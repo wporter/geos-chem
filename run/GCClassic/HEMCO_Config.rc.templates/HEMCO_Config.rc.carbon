@@ -541,7 +541,7 @@ Mask fractions:              false
 # --- CH4: Termites from CAMS-GLOB-TERM.v1.1 ---
 #==============================================================================
 (((CAMS_TERMITES
-0 CH4_TERMITES $ROOT/HEMCO/CH4/v2026-02/CAMS_Termites/CAMS-GLOB-TERM_v1.1_methane_2000.nc CH4_termites 2000/1-12/1/0 C xy kg/m2/s CH4 - 13 1
+0 CH4_TERMITES $ROOT/CH4/v2026-02/CAMS_Termites/CAMS-GLOB-TERM_v1.1_methane_2000.nc CH4 2000/1-12/1/0 C xy kg/m2/s CH4 - 13 1
 )))CAMS_TERMITES
 
 #==============================================================================
