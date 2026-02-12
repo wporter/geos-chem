@@ -7,16 +7,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased] - TBD
 ### Added
 - Added `HTAP_SHIP` toggle in `HEMCO_Config.rc.carbon` templates for GC-Classic and GCHP
+- Added routines `Lookup_Grid` and `Register_State_Grid` to `Headers/state_grid_mod.F90`
+- Added `State_Grid` as an argument to History routines `History_Init`, `History_AddItemToCollection`,`History_NetCdf_Define`, `History_Write`, and `IndexVarList_Create`
+- Added routine `History_InitCoordVars` to `history_mod.F90`
 
 ### Changed
 - Update termite CH4 emissions to the CAMS-GLOB-TERM_v1.1 product
 - Updated routine `SAFETY` (in `GeosCore/wetscav_mod.F90`) to reset small or negative values to zero
+- Moved coordinate variables for GC-Classic History netCDF files from `GeosUtil/grid_registry_mod.F90` to the `State_Grid` object
+- Changed several `State_Grid` fields from `fp` to `f8` precision. (In practice both are `REAL*8` but this makes it more explicit.)
+- Moved the population of coordinate variables for History netCDF  output from `grid_registry_mod.F90` to `history_mod.F90` (in routine `History_InitCoordVars`)
 
 ### Fixed
 - Fixed incorrect unit conversion from v/v -> molec/cm3 in `planeflight_mod.F90`
 ### Removed
 - Removed `ARCTAS_SHIP`, `CORBETT_SHIP`, `ICOADS_SHIP` from `HEMCO_Config.rc` template files
 - Retired Fung termite and soil absorption emission options from carbon simulation
+- Removed `GeosUtil/grid_registry_mod.F90`.
 
 ## [14.7.0] - 2026-02-05
 ### Added
