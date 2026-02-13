@@ -1413,7 +1413,7 @@ CONTAINS
     ! Loop over longitudes
     !$OMP PARALLEL DO                                                        &
     !$OMP DEFAULT( SHARED                                                   )&
-    !$OMP PRIVATE( I, locTime, good, S, N                                   )
+    !$OMP PRIVATE( I, J, locTime, good, S, N                                )
     DO I = 1, State_Grid%NX
 
        !---------------------------------------------------------------------
