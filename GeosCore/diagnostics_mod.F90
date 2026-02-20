@@ -1543,15 +1543,11 @@ CONTAINS
        ! --------------------------------------------
        IF ( State_Diag%Archive_SatDiagnCldTopP ) THEN
 
-          !$OMP PARALLEL DO           &
-          !$OMP DEFAULT( SHARED     ) &
-          !$OMP PRIVATE( J )
           ! Loop over latitudes:
           DO J = 1, State_Grid%NY
              State_Diag%SatDiagnCldTopP(I,J) = &
                   State_Met%PEDGE(I,J,State_MET%CLDTOPS(I,J)) * GOOD
           ENDDO
-          !$OMP END PARALLEL DO
           
        ENDIF
 
