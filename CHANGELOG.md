@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Added routines `Lookup_Grid` and `Register_State_Grid` to `Headers/state_grid_mod.F90`
 - Added `State_Grid` as an argument to History routines `History_Init`, `History_AddItemToCollection`,`History_NetCdf_Define`, `History_Write`, and `IndexVarList_Create`
 - Added routine `History_InitCoordVars` to `history_mod.F90`
+- Added cloud fraction and cloud top pressure to the SatDiagn diagnostic collection
 
 ### Changed
 - Update termite CH4 emissions to the CAMS-GLOB-TERM_v1.1 product
