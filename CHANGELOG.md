@@ -23,8 +23,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Fixed
 - Fixed incorrect unit conversion from v/v -> molec/cm3 in `planeflight_mod.F90`
-- Fixed typo in the call to `Finalize` for the
-  `State_Diag%ProdOCPIfromOCPO` diagnostic array
+- Fixed typo in the call to `Finalize` for the `State_Diag%ProdOCPIfromOCPO` diagnostic array
 
 ### Removed
 - Removed `ARCTAS_SHIP`, `CORBETT_SHIP`, `ICOADS_SHIP` from `HEMCO_Config.rc` template files
