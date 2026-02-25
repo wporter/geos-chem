@@ -194,20 +194,20 @@ CONTAINS
 !
 ! !INPUT PARAMETERS:
 !
-    TYPE(DgnList),       INTENT(IN)    :: Diag_List   ! Diagnostics list object
-    TYPE(TaggedDgnList), INTENT(IN)    :: TaggedDiag_List
+    TYPE(DgnList),       INTENT(IN)    :: Diag_List       ! Diagnostics List
+    TYPE(TaggedDgnList), INTENT(IN)    :: TaggedDiag_List ! Tagged Diag List
 !
 ! !INPUT/OUTPUT PARAMETERS:
 !
-    TYPE(OptInput),      INTENT(INOUT) :: Input_Opt   ! Input Options object
-    TYPE(ChmState),      INTENT(INOUT) :: State_Chm   ! Chemistry State object
-    TYPE(DgnState),      INTENT(INOUT) :: State_Diag  ! Diagnostics State object
-    TYPE(GrdState),      INTENT(INOUT) :: State_Grid  ! Grid State object
-    TYPE(MetState),      INTENT(INOUT) :: State_Met   ! Meteorology State object
+    TYPE(OptInput),      INTENT(INOUT) :: Input_Opt       ! Input Options
+    TYPE(ChmState),      INTENT(INOUT) :: State_Chm       ! Chemistry State
+    TYPE(DgnState),      INTENT(INOUT) :: State_Diag      ! Diagnostics State
+    TYPE(GrdState),      INTENT(INOUT) :: State_Grid      ! Grid State
+    TYPE(MetState),      INTENT(INOUT) :: State_Met       ! Meteorology State
 !
 ! !OUTPUT PARAMETERS:
 !
-    INTEGER,             INTENT(OUT)   :: RC          ! Success or failure
+    INTEGER,             INTENT(OUT)   :: RC              ! Success or failure
 !
 ! !REMARKS:
 !  Need to add better error checking, currently we just return upon error.
@@ -232,10 +232,11 @@ CONTAINS
     !=======================================================================
     ! Initialize the Chemistry State object
     !=======================================================================
-    CALL Init_State_Chm(  Input_Opt  = Input_Opt,   &  ! Input Options
-                          State_Chm  = State_Chm,   &  ! Chemistry State
-                          State_Grid = State_Grid,  &  ! Grid State
-                          RC         = RC          )   ! Success or failure
+    CALL Init_State_Chm(  Input_Opt       = Input_Opt,                      &
+                          State_Chm       = State_Chm,                      &
+                          State_Grid      = State_Grid,                     &
+                          TaggedDiag_List = TaggedDiag_List,                &
+                          RC              = RC                             )
 
     ! Trap potential errors
     IF ( RC /= GC_SUCCESS ) THEN
@@ -265,10 +266,10 @@ CONTAINS
     !=======================================================================
     ! Initialize the Meteorology State object
     !=======================================================================
-    CALL Init_State_Met( Input_Opt   = Input_Opt,   &  ! Input Options
-                         State_Grid  = State_Grid,  &  ! Grid State
-                         State_Met   = State_Met,   &  ! Meteorology State
-                         RC          = RC          )   ! Success or failure?
+    CALL Init_State_Met( Input_Opt   = Input_Opt,                           &
+                         State_Grid  = State_Grid,                          &
+                         State_Met   = State_Met,                           &
+                         RC          = RC                                  )
 
     ! Trap potential errors
     IF ( RC /= GC_SUCCESS ) THEN
@@ -298,11 +299,11 @@ CONTAINS
 !
     USE ErrCode_Mod
 #if !(defined( EXTERNAL_GRID ) || defined( EXTERNAL_FORCING ))
-    USE GC_Grid_Mod,        ONLY : Compute_Grid
+    USE GC_Grid_Mod,    ONLY : Compute_Grid
 #endif
-    USE Input_Opt_Mod,      ONLY : OptInput
-    USE State_Grid_Mod,     ONLY : Allocate_State_Grid
-    USE State_Grid_Mod,     ONLY : GrdState
+    USE Input_Opt_Mod,  ONLY : OptInput
+    USE State_Grid_Mod, ONLY : Allocate_State_Grid, Register_State_Grid
+    USE State_Grid_Mod, ONLY : GrdState
 !
 ! !INPUT PARAMETERS:
 !
@@ -354,7 +355,7 @@ CONTAINS
     ! Allocate State_Grid arrays
     CALL Allocate_State_Grid( Input_Opt, State_Grid, RC )
     IF ( RC /= GC_SUCCESS ) THEN
-       ErrMsg = 'Error encountered in "Compute_Grid"!'
+       ErrMsg = 'Error encountered in "Allocate_State_Grid"!'
        CALL GC_Error( ErrMsg, RC, ThisLoc )
        RETURN
     ENDIF
@@ -369,6 +370,14 @@ CONTAINS
        RETURN
     ENDIF
 #endif
+
+    ! Register State_Grid arrays
+    CALL Register_State_Grid( Input_Opt, State_Grid, RC )
+    IF ( RC /= GC_SUCCESS ) THEN
+       ErrMsg = 'Error encountered in "Register_State_Grid"!'
+       CALL GC_Error( ErrMsg, RC, ThisLoc )
+       RETURN
+    ENDIF
 
   END SUBROUTINE GC_Init_Grid
 !EOC
@@ -394,7 +403,6 @@ CONTAINS
     USE Aerosol_Mod,        ONLY : Init_Aerosol
     USE Carbon_Mod,         ONLY : Init_Carbon
     USE Carbon_Gases_Mod,   ONLY : Init_Carbon_Gases
-    USE CO2_Mod,            ONLY : Init_CO2
     USE Depo_Mercury_Mod,   ONLY : Init_Depo_Mercury
     USE DiagList_Mod,       ONLY : DgnList
     USE Drydep_Mod,         ONLY : Init_Drydep
@@ -403,7 +411,6 @@ CONTAINS
     USE Error_Mod,          ONLY : Debug_Msg
     USE FullChem_Mod,       ONLY : Init_FullChem
     USE Get_Ndep_Mod,       ONLY : Init_Get_Ndep
-    USE Global_CH4_Mod,     ONLY : Init_Global_CH4
     USE Input_Mod,          ONLY : Do_Error_Checks
     USE Input_Opt_Mod,      ONLY : OptInput
     USE Land_Mercury_Mod,   ONLY : Init_Land_Mercury
@@ -416,7 +423,6 @@ CONTAINS
     USE State_Diag_Mod,     ONLY : DgnState
     USE State_Grid_Mod,     ONLY : GrdState
     USE Sulfate_Mod,        ONLY : Init_Sulfate
-    USE Tagged_CO_Mod,      ONLY : Init_Tagged_CO
     USE Tagged_O3_Mod,      ONLY : Init_Tagged_O3
     USE Vdiff_Mod,          ONLY : Init_Vdiff
     USE WetScav_Mod,        ONLY : Init_WetScav
@@ -685,43 +691,6 @@ CONTAINS
           RETURN
        ENDIF
     ENDIF
-
-    !-----------------------------------------------------------------
-    ! CO2
-    !-----------------------------------------------------------------
-    IF ( Input_Opt%ITS_A_CO2_SIM ) THEN
-       CALL Init_CO2( Input_Opt, State_Grid, RC )
-       IF ( RC /= GC_SUCCESS ) THEN
-          ErrMsg = 'Error encountered in "Init_CO2"!'
-          CALL GC_Error( ErrMsg, RC, ThisLoc )
-          RETURN
-       ENDIF
-    ENDIF
-
-    !-----------------------------------------------------------------
-    ! CH4
-    !-----------------------------------------------------------------
-    IF ( Input_Opt%ITS_A_CH4_SIM ) THEN
-       CALL Init_Global_Ch4( Input_Opt, State_Chm, State_Diag, State_Grid, RC )
-       IF ( RC /= GC_SUCCESS ) THEN
-          ErrMsg = 'Error encountered in "Init_Global_CH4"!'
-          CALL GC_Error( ErrMsg, RC, ThisLoc )
-          RETURN
-       ENDIF
-    ENDIF
-
-    !-----------------------------------------------------------------
-    ! Tagged CO
-    !-----------------------------------------------------------------
-    IF ( Input_Opt%ITS_A_TAGCO_SIM ) THEN
-       CALL Init_Tagged_CO( Input_Opt, State_Diag, State_Grid, RC )
-       IF ( RC /= GC_SUCCESS ) THEN
-          ErrMsg = 'Error encountered in "Tagged_CO"!'
-          CALL GC_Error( ErrMsg, RC, ThisLoc )
-          RETURN
-       ENDIF
-    ENDIF
-
 
     !-----------------------------------------------------------------
     ! Tagged O3

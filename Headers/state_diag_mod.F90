@@ -947,6 +947,12 @@ MODULE State_Diag_Mod
      REAL(f8),           POINTER :: SatDiagnTAir(:,:,:)
      LOGICAL                     :: Archive_SatDiagnTAir
 
+     REAL(f8),           POINTER :: SatDiagnCldFrac(:,:,:)
+     LOGICAL                     :: Archive_SatDiagnCldFrac
+
+     REAL(f8),           POINTER :: SatDiagnCldTopP(:,:)
+     LOGICAL                     :: Archive_SatDiagnCldTopP
+
      REAL(f8),           POINTER :: SatDiagnGWETROOT(:,:)
      LOGICAL                     :: Archive_SatDiagnGWETROOT
 
@@ -990,12 +996,10 @@ MODULE State_Diag_Mod
      TYPE(DgnMap),       POINTER :: Map_RadDecay
      LOGICAL                     :: Archive_RadDecay
 
-     !%%%%% CO2 specialty simulation %%%%%
+     !%%%%% Carbon simulation %%%%%
 
      REAL(f4),           POINTER :: ProdCO2fromCO(:,:,:)
      LOGICAL                     :: Archive_ProdCO2fromCO
-
-     !%%%%% CH4 specialty simulation %%%%%
 
      REAL(f4),           POINTER :: LossCH4byClinTrop(:,:,:)
      LOGICAL                     :: Archive_LossCH4byClinTrop
@@ -1006,7 +1010,6 @@ MODULE State_Diag_Mod
      REAL(f4),           POINTER :: LossCH4inStrat(:,:,:)
      LOGICAL                     :: Archive_LossCH4inStrat
 
-     ! %%%%% Tagged CO simulation %%%%%
      REAL(f4),           POINTER :: ProdCOfromCH4(:,:,:)
      LOGICAL                     :: Archive_ProdCOfromCH4
 
@@ -2403,6 +2406,12 @@ CONTAINS
     State_Diag%SatDiagnTAir                        => NULL()
     State_Diag%Archive_SatDiagnTAir                = .FALSE.
 
+    State_Diag%SatDiagnCldFrac                     => NULL()
+    State_Diag%Archive_SatDiagnCldFrac             = .FALSE.
+
+    State_Diag%SatDiagnCldTopP                     => NULL()
+    State_Diag%Archive_SatDiagnCldTopP             = .FALSE.
+
     State_Diag%SatDiagnGWETROOT                    => NULL()
     State_Diag%Archive_SatDiagnGWETROOT            = .FALSE.
 
@@ -2558,12 +2567,10 @@ CONTAINS
     State_Diag%ProdPOPPBCPOfromNO3                 => NULL()
     State_Diag%Archive_ProdPOPPBCPOfromNO3         = .FALSE.
 
-    !%%%%% CO2 simulation diagnostics %%%%%
+    !%%%%% Carbon simulation diagnostics %%%%%
 
     State_Diag%ProdCO2fromCO                       => NULL()
     State_Diag%Archive_ProdCO2fromCO               = .FALSE.
-
-    !%%%%% CH4 simulation diagnostics %%%%%
 
     State_Diag%LossCH4byClinTrop                   => NULL()
     State_Diag%Archive_LossCH4byClinTrop           = .FALSE.
@@ -2573,8 +2580,6 @@ CONTAINS
 
     State_Diag%LossCH4inStrat                      => NULL()
     State_Diag%Archive_LossCH4inStrat              = .FALSE.
-
-    !%%%%% Tagged CO simulation diagnostics %%%%%
 
     State_Diag%ProdCOfromCH4                          => NULL()
     State_Diag%Archive_ProdCOfromCH4                  = .FALSE.
@@ -4989,6 +4994,50 @@ CONTAINS
     ENDIF
 
     !------------------------------------------------------------------------
+    ! Satellite diagnostic: Cloud top fraction (unitless)
+    !------------------------------------------------------------------------
+    diagId  = 'SatDiagnCldFrac'
+    CALL Init_and_Register(                                                  &
+         Input_Opt      = Input_Opt,                                         &
+         State_Chm      = State_Chm,                                         &
+         State_Diag     = State_Diag,                                        &
+         State_Grid     = State_Grid,                                        &
+         DiagList       = Diag_List,                                         &
+         TaggedDiagList = TaggedDiag_List,                                   &
+         Ptr2Data       = State_Diag%SatDiagnCldFrac,                        &
+         archiveData    = State_Diag%Archive_SatDiagnCldFrac,                &
+         diagId         = diagId,                                            &
+         RC             = RC                                                )
+
+    IF ( RC /= GC_SUCCESS ) THEN
+       errMsg = TRIM( errMsg_ir ) // TRIM( diagId )
+       CALL GC_Error( errMsg, RC, thisLoc )
+       RETURN
+    ENDIF
+
+    !------------------------------------------------------------------------
+    ! Satellite diagnostic: Cloud top pressure (hPa)
+    !------------------------------------------------------------------------
+    diagId  = 'SatDiagnCldTopP'
+    CALL Init_and_Register(                                                  &
+         Input_Opt      = Input_Opt,                                         &
+         State_Chm      = State_Chm,                                         &
+         State_Diag     = State_Diag,                                        &
+         State_Grid     = State_Grid,                                        &
+         DiagList       = Diag_List,                                         &
+         TaggedDiagList = TaggedDiag_List,                                   &
+         Ptr2Data       = State_Diag%SatDiagnCldTopP,                        &
+         archiveData    = State_Diag%Archive_SatDiagnCldTopP,                &
+         diagId         = diagId,                                            &
+         RC             = RC                                                )
+
+    IF ( RC /= GC_SUCCESS ) THEN
+       errMsg = TRIM( errMsg_ir ) // TRIM( diagId )
+       CALL GC_Error( errMsg, RC, thisLoc )
+       RETURN
+    ENDIF
+
+    !------------------------------------------------------------------------
     ! Satellite diagnostic: Root Zone Soil Moisture (or Wetness): GWETROOT
     !------------------------------------------------------------------------
     diagId  = 'SatDiagnGWETROOT'
@@ -5224,6 +5273,8 @@ CONTAINS
          State_Diag%Archive_SatDiagnPBLHeight                           .or. &
          State_Diag%Archive_SatDiagnPBLTop                              .or. &
          State_Diag%Archive_SatDiagnTAir                                .or. &
+         State_Diag%Archive_SatDiagnCldFrac                             .or. &
+         State_Diag%Archive_SatDiagnCldTopP                             .or. &
          State_Diag%Archive_SatDiagnGWETROOT                            .or. &
          State_Diag%Archive_SatDiagnGWETTOP                             .or. &
          State_Diag%Archive_SatDiagnJval                                .or. &
@@ -5246,7 +5297,6 @@ CONTAINS
          State_Diag%Archive_SatDiagnSLP                                 .or. &
          State_Diag%Archive_SatDiagnSPHU                                .or. &
          State_Diag%Archive_SatDiagnSurfFlux                            .or. &
-         State_Diag%Archive_SatDiagnTAir                                .or. &
          State_Diag%Archive_SatDiagnTROPP                               .or. &
          State_Diag%Archive_SatDiagnTS                                  .or. &
          State_Diag%Archive_SatDiagnWetLossLS                           .or. &
@@ -7404,15 +7454,13 @@ CONTAINS
     ! ALL FULL-CHEMISTRY SIMULATIONS
     ! (benchmark, standard, tropchem, *SOA*, aciduptake, marinePOA)
     !
-    ! and THE CH4 SPECIALTY SIMULATION
+    ! THE CARBON SIMULATION
     !=======================================================================
     IF ( Input_Opt%ITS_A_FULLCHEM_SIM                                   .or. &
-         Input_Opt%ITS_A_CARBON_SIM                                     .or. &
-         Input_Opt%ITS_A_CH4_SIM                                        ) THEN
+         Input_Opt%ITS_A_CARBON_SIM                                     ) THEN
 
        !--------------------------------------------------------------------
-       ! OH concentration upon exiting the FlexChem solver (fullchem
-       ! simulations) or the CH4 specialty simulation chemistry routine
+       ! OH concentration upon exiting the FlexChem solver
        !--------------------------------------------------------------------
        diagID  = 'OHconcAfterChem'
        CALL Init_and_Register(                                               &
@@ -7667,7 +7715,7 @@ CONTAINS
        !-------------------------------------------------------------------
        ! Halt with an error message if any of the following quantities
        ! have been requested as diagnostics in simulations other than
-       ! full-chemistry or CH4 simulations.
+       ! full-chemistry or carbon simulations.
        !
        ! This will prevent potential errors caused by the quantities
        ! being requested as diagnostic output when the corresponding
@@ -10120,7 +10168,6 @@ CONTAINS
     IF ( Input_Opt%ITS_A_FULLCHEM_SIM                                   .or. &
          Input_Opt%ITS_A_CARBON_SIM                                     .or. &
          Input_Opt%ITS_A_MERCURY_SIM                                    .or. &
-         Input_Opt%ITS_A_TAGCO_SIM                                      .or. &
          Input_Opt%ITS_A_TAGO3_SIM                                    ) THEN
 
        !--------------------------------------------------------------------
@@ -10710,9 +10757,9 @@ CONTAINS
     !=======================================================================
     ! The production and loss diagnostics are only relevant for:
     !
-    ! THE CO2 SPECIALTY SIMULATION
+    ! CO2 IN THE CARBON SIMULATION
     !=======================================================================
-    IF ( Input_Opt%ITS_A_CO2_SIM .or. Input_Opt%ITS_A_CARBON_SIM ) THEN
+    IF ( Input_Opt%ITS_A_CARBON_SIM ) THEN
 
        !--------------------------------------------------------------------
        ! Prod of CO2 from CO oxidation
@@ -10763,10 +10810,9 @@ CONTAINS
     !=======================================================================
     ! These diagnostics are only relevant for:
     !
-    ! THE CH4 SPECIALTY SIMULATION
+    ! CH4 IN THE CARBON SIMULATION
     !=======================================================================
-    IF ( Input_Opt%ITS_A_CH4_SIM      .or. &
-         Input_Opt%ITS_A_CARBON_SIM ) THEN
+    IF ( Input_Opt%ITS_A_CARBON_SIM ) THEN
 
        !--------------------------------------------------------------------
        ! Loss of CH4 by Cl in troposphere
@@ -10871,11 +10917,10 @@ CONTAINS
     !=======================================================================
     ! These diagnostics are only relevant for:
     !
-    ! THE CO SPECIALTY SIMULATION and
-    ! THE FULL-CHEMISTRY SIMULATIONS (for archiving output for tagCO)
+    ! THE CARBON SIMULATION and
+    ! THE FULL-CHEMISTRY SIMULATIONS (for archiving output for CO in carbon sim)
     !=======================================================================
-    IF ( Input_Opt%ITS_A_TAGCO_SIM                                      .or. & 
-         Input_Opt%ITS_A_FULLCHEM_SIM                                   .or. &
+    IF ( Input_Opt%ITS_A_FULLCHEM_SIM                                   .or. &
          Input_Opt%ITS_A_CARBON_SIM                                   ) THEN
 
        !--------------------------------------------------------------------
@@ -13029,6 +13074,16 @@ CONTAINS
                    RC       = RC                                            )
     IF ( RC /= GC_SUCCESS ) RETURN
 
+    CALL Finalize( diagId   = 'SatDiagnCldFrac',                           &
+                   Ptr2Data = State_Diag%SatDiagnCldFrac,                  &
+                   RC       = RC                                            )
+    IF ( RC /= GC_SUCCESS ) RETURN
+
+    CALL Finalize( diagId   = 'SatDiagnCldTopP',                           &
+                   Ptr2Data = State_Diag%SatDiagnCldTopP,                  &
+                   RC       = RC                                            )
+    IF ( RC /= GC_SUCCESS ) RETURN
+
     CALL Finalize( diagId   = 'SatDiagnGWETROOT',                          &
                    Ptr2Data = State_Diag%SatDiagnGWETROOT,                 &
                    RC       = RC                                            )
@@ -15149,6 +15204,16 @@ CONTAINS
        IF ( isUnits   ) Units = 'K'
        IF ( isRank    ) Rank  = 3
 
+    ELSE IF ( TRIM( Name_AllCaps ) == 'SATDIAGNCLDFRAC' ) THEN
+       IF ( isDesc    ) Desc  = '3D cloud fractions'
+       IF ( isUnits   ) Units = 'unitless'
+       IF ( isRank    ) Rank  = 3
+
+    ELSE IF ( TRIM( Name_AllCaps ) == 'SATDIAGNCLDTOPP' ) THEN
+       IF ( isDesc    ) Desc  = 'Cloud top pressure'
+       IF ( isUnits   ) Units = 'hPa'
+       IF ( isRank    ) Rank  = 2
+
     ELSE IF ( TRIM( Name_AllCaps ) == 'SATDIAGNGWETROOT' ) THEN
        IF ( isDesc    ) Desc  = 'Root Zone Soil Moisture (or Wetness)'
        IF ( isUnits   ) Units = 'Fraction'
@@ -16819,17 +16884,6 @@ CONTAINS
           numTags = State_Chm%nKppFix
        CASE( 'GAS',     'G' )
           numTags = State_Chm%nGasSpc
-      !------------------------------------------------------
-      ! Prior to 10/24/18:
-      ! Disable Hg tagging for now, but leave commented out
-      ! for future reference (bmy, 10/24/18)
-      !CASE( 'HG0'     )
-      !   numTags = State_Chm%N_Hg_Cats
-      !CASE( 'HG2'     )
-      !   numTags = State_Chm%N_Hg_Cats
-      !CASE( 'HGP'     )
-      !   numTags = State_Chm%N_Hg_Cats
-      !------------------------------------------------------
        CASE( 'HYG',     'H' )
           numTags = State_Chm%nHygGrth
        CASE( 'KPP',     'K' )
@@ -16968,7 +17022,8 @@ CONTAINS
     ! Get mapping index
     !=======================================================================
     SELECT CASE( TRIM( tagID ) )
-       CASE( 'ALL','ADV', 'DUSTBIN', 'TOMASBIN', 'PRD', 'LOS', 'RRTMG', 'UVFLX', 'RXN' )
+       CASE( 'ALL', 'ADV',   'DUSTBIN', 'TOMASBIN', 'PRD',                   &
+             'LOS', 'RRTMG', 'UVFLX',   'RXN'                               )
           D = N
        CASE( 'AER'  )
           D = State_Chm%Map_Aero(N)
@@ -16978,17 +17033,6 @@ CONTAINS
           D = State_Chm%Map_DryDep(N)
        CASE( 'GAS'  )
           D = State_Chm%Map_GasSpc(N)
-       !------------------------------------------------------
-       ! Prior to 10/24/18:
-       ! Disable Hg tagging for now, but leave commented out
-       ! for future reference (bmy, 10/24/18)
-       !CASE( 'HG0'  )
-       !   D = State_Chm%Hg0_Id_List(N)
-       !CASE( 'HG2'  )
-       !   D = State_Chm%Hg2_Id_List(N)
-       !CASE( 'HGP'  )
-       !   D = State_Chm%HgP_Id_List(N)
-       !------------------------------------------------------
        CASE( 'HYG'  )
           D = State_Chm%Map_HygGrth(N)
        CASE( 'VAR'  )
