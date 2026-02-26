@@ -444,10 +444,13 @@ CONTAINS
        LPRTJ = .false.
        I_PRT = 20
        J_PRT = 20
-       IF ( I .eq. I_PRT .and. J .eq. J_PRT .and. Input_Opt%Verbose ) THEN
-          print *, "cldj_interface_mod.F90: Cloud-J prints on for lat, lon: ", &
-                   State_Grid%GlobalYMid(I,J), State_Grid%GlobalXMid(I,J)
-          LPRTJ = .true.
+       IF ( Input_Opt%CloudJ_Verbose ) THEN
+          IF ( I == I_PRT .and. J == J_PRT ) THEN
+             print*, &
+               "cldj_interface_mod.F90: Cloud-J prints on for lat, lon: ", &
+               State_Grid%GlobalYMid(I,J), State_Grid%GlobalXMid(I,J)
+             LPRTJ = .true.
+          ENDIF
        ENDIF
 
        !-----------------------------------------------------------------
