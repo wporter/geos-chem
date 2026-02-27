@@ -13256,7 +13256,7 @@ CONTAINS
     IF ( RC /= GC_SUCCESS ) RETURN
 
     CALL Finalize( diagId   = 'ProdOCPIfromOCPO',                            &
-                   Ptr2Data = State_Diag%ProdBCPIfromBCPO,                   &
+                   Ptr2Data = State_Diag%ProdOCPIfromOCPO,                   &
                    RC       = RC                                            )
     IF ( RC /= GC_SUCCESS ) RETURN
 
