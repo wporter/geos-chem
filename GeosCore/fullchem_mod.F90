@@ -3778,12 +3778,15 @@ CONTAINS
       RETURN
    END IF
 
+    !gather local sizes
+    IF (shm_rank == 0) THEN
+       ALLOCATE(sizes(shm_size))
+    ELSE
+       ALLOCATE(sizes(1)) ! dummy for non-root
+    ENDIF
+    CALL MPI_Gather(NCELL_local, 1, MPI_INTEGER, sizes, 1, MPI_INTEGER, &
+         0, shm_comm, ierr)
 
-   !gather local sizes
-    IF (shm_rank == 0) ALLOCATE(sizes(shm_size))
-    CALL MPI_Gather(NCELL_local, 1, MPI_INTEGER, sizes, 1, MPI_INTEGER,        &
-                    0, shm_comm, ierr)
-    
     !build prefix sum and NCELL_total on rank-0    
     IF (shm_rank == 0) THEN
        ALLOCATE(prefix(shm_size))
@@ -3792,15 +3795,19 @@ CONTAINS
           prefix(i) = prefix(i-1) + sizes(i-1)
        END DO
        NCELL_total = prefix(shm_size) + sizes(shm_size)
-    END IF
+    ELSE
+       ALLOCATE(prefix(1)) ! dummy for non-root
+    ENDIF
     
     !broadcast node-wide constants and my true offset
     CALL MPI_Bcast(NCELL_total, 1, MPI_INTEGER, 0, shm_comm, ierr)
-    
-    IF (.NOT. ALLOCATED(prefix)) ALLOCATE(prefix(1))   ! dummy for non-root
-    CALL MPI_Scatter(prefix, 1, MPI_INTEGER, offset, 1, MPI_INTEGER,           &
-                     0, shm_comm, ierr)
-    IF (shm_rank == 0) DEALLOCATE(prefix, sizes)
+
+    CALL MPI_Scatter(prefix, 1, MPI_INTEGER, offset, 1, MPI_INTEGER, &
+         0, shm_comm, ierr)
+
+    ! Clean up
+    DEALLOCATE(prefix, sizes)
+
     
 
    ! debug print: check shared memory size
@@ -4071,7 +4078,7 @@ CONTAINS
 
     IF ( ALLOCATED( JvSumDay ) ) THEN
        DEALLOCATE( JvSumDay, STAT=RC  )
-       CALL GC_CheckVar( 'fullchem_mod.F90:JvCountDay', 2, RC )
+       CALL GC_CheckVar( 'fullchem_mod.F90:JvSumDay', 2, RC )
        IF ( RC /= GC_SUCCESS ) RETURN
     ENDIF
 
@@ -4083,7 +4090,7 @@ CONTAINS
 
     IF ( ALLOCATED( JvSumMon ) ) THEN
        DEALLOCATE( JvSumMon, STAT=RC  )
-       CALL GC_CheckVar( 'fullchem_mod.F90:JvCountMon', 2, RC )
+       CALL GC_CheckVar( 'fullchem_mod.F90:JvSumMon', 2, RC )
        IF ( RC /= GC_SUCCESS ) RETURN
     ENDIF
 
