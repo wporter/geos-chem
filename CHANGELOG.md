@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Added cloud fraction and cloud top pressure to the SatDiagn diagnostic collection
 - Added new field `Input_Opt%CloudJ_Verbose`
 - Added `cloud-j:verbose` YAML tag (with default setting `false`) to  `geoschem_config.yml` templates for GC-Classic, GCHP, GEOS, CESM, and WRF
+- Added error traps to prevent integration tests and parallel tests from running if a conda environment with netCDF is active
 
 ### Changed
 - Update termite CH4 emissions to the CAMS-GLOB-TERM_v1.1 product
