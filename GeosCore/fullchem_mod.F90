@@ -1768,9 +1768,46 @@ CONTAINS
              ENDIF
           ENDIF
 
-          !=====================================================================
-          ! Try another time if it failed
-          !=====================================================================
+!#if defined( MODEL_GEOS ) || defined( MODEL_WRF ) || defined( MODEL_CESM )
+!          ! TODO (ewl, 2/25/26)
+!          ! The following code is not compatible with the MPI load balancing
+!          ! implementation as is, and will need to be adapted in the future.
+!
+!          ! Keep track of number of error boxes
+!          IF ( State_Diag%Archive_KppError ) THEN
+!             State_Diag%KppError(I,J,L) = State_Diag%KppError(I,J,L) + 1.0
+!          ENDIF
+!#endif
+       ENDIF
+
+!#if defined( MODEL_GEOS )
+!       ! TODO (ewl, 2/25/26)
+!       ! The following code is not compatible with the MPI load balancing
+!       ! implementation as is, and will need to be adapted in the future.
+!
+!       ! Mark integration as erroneous if negative concentrations so that
+!       ! it will be repeated below (cakelle2, 2023/10/26)
+!       IF ( IERR >= 0 .AND. Input_Opt%KppCheckNegatives >= 0 ) THEN
+!          IF ( ( Input_Opt%KppCheckNegatives==0 .AND. &
+!               State_Met%InStratMeso(I,J,L) ) .OR. &
+!               ( L > (  State_Grid%NZ - Input_Opt%KppCheckNegatives) ) ) THEN
+!             IF ( ANY(C < 0.0_dp) ) THEN
+!                IERR = -999
+!                ! Include negative concentration boxes within error box
+!                ! diagnostic
+!                IF ( State_Diag%Archive_KppError ) THEN
+!                   State_Diag%KppError(I,J,L) = &
+!                        State_Diag%KppError(I,J,L) + 1.0
+!                ENDIF
+!             ENDIF
+!          ENDIF
+!       ENDIF
+!#endif
+
+       !==================================================================
+       ! Try another time if it failed
+       !==================================================================
+       IF ( IERR < 0 ) THEN
 
           ! Zero the first time step (Hstart, used by Rosenbrock).  Also reset
           ! C with concentrations prior to the 1st call to "Integrate".
