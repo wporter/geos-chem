@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Added cloud fraction and cloud top pressure to the SatDiagn diagnostic collection
 - Added new field `Input_Opt%CloudJ_Verbose`
 - Added `cloud-j:verbose` YAML tag (with default setting `false`) to  `geoschem_config.yml` templates for GC-Classic, GCHP, GEOS, CESM, and WRF
+- Added routine `Print_Species_Global_Mass_From_VVDry` in `GeosUtil/print_mod.F90`
 
 ### Changed
 - Update termite CH4 emissions to the CAMS-GLOB-TERM_v1.1 product
@@ -22,6 +23,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Moved the population of coordinate variables for History netCDF  output from `grid_registry_mod.F90` to `history_mod.F90` (in routine `History_InitCoordVars`)
 - Updated `run/GCHP/setCommonRunSettings.template` to disable the HEMCO PARANOx extension for C360 or C720 grids
 - Updated `createRunDir.sh` scripts for GC-Classic and GCHP to turn on offline bulk seasalt emissions and bulk dust emissions in TOMAS simulations
+- Updated `Interfaces/GCClassic/main.F90` to call`Print_Species_Global_Mass_from_VVDry` (instead of`Print_Species_Global_Mass`) in order to avoid numerical differences when verbose printout is on
 
 ### Fixed
 - Fixed incorrect unit conversion from v/v -> molec/cm3 in `planeflight_mod.F90`

@@ -862,8 +862,9 @@ PROGRAM GEOS_Chem
 
           ! If verbose, print global mass per species at start of timestep
           IF ( VerboseAndRoot ) THEN
-             CALL Print_Species_Global_Mass('', Input_Opt, &
-                  State_Chm, State_Met, State_Grid, RC )
+             CALL Print_Species_Global_Mass_from_VVDry(                      &
+                  '',        Input_Opt,  State_Chm,                          &
+                  State_Met, State_Grid, RC                                 )
           ENDIF
 
           !------------------------------------------------------------------
