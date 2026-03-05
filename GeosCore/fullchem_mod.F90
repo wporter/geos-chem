@@ -1781,41 +1781,39 @@ CONTAINS
              ENDIF
           ENDIF
 
-!#if defined( MODEL_GEOS ) || defined( MODEL_WRF ) || defined( MODEL_CESM )
-!          ! TODO (ewl, 2/25/26)
-!          ! The following code is not compatible with the MPI load balancing
-!          ! implementation as is, and will need to be adapted in the future.
-!
-!          ! Keep track of number of error boxes
-!          IF ( State_Diag%Archive_KppError ) THEN
-!             State_Diag%KppError(I,J,L) = State_Diag%KppError(I,J,L) + 1.0
-!          ENDIF
-!#endif
+#if defined( MODEL_GEOS ) || defined( MODEL_WRF ) || defined( MODEL_CESM )
+          ! TODO (ewl, 2/25/26)
+          ! The following code is not compatible with the MPI load balancing
+          ! implementation as is, and will need to be adapted in the future.
+          !! Keep track of number of error boxes
+          !IF ( State_Diag%Archive_KppError ) THEN
+          !   State_Diag%KppError(I,J,L) = State_Diag%KppError(I,J,L) + 1.0
+          !ENDIF
+#endif
        ENDIF
 
-!#if defined( MODEL_GEOS )
-!       ! TODO (ewl, 2/25/26)
-!       ! The following code is not compatible with the MPI load balancing
-!       ! implementation as is, and will need to be adapted in the future.
-!
-!       ! Mark integration as erroneous if negative concentrations so that
-!       ! it will be repeated below (cakelle2, 2023/10/26)
-!       IF ( IERR >= 0 .AND. Input_Opt%KppCheckNegatives >= 0 ) THEN
-!          IF ( ( Input_Opt%KppCheckNegatives==0 .AND. &
-!               State_Met%InStratMeso(I,J,L) ) .OR. &
-!               ( L > (  State_Grid%NZ - Input_Opt%KppCheckNegatives) ) ) THEN
-!             IF ( ANY(C < 0.0_dp) ) THEN
-!                IERR = -999
-!                ! Include negative concentration boxes within error box
-!                ! diagnostic
-!                IF ( State_Diag%Archive_KppError ) THEN
-!                   State_Diag%KppError(I,J,L) = &
-!                        State_Diag%KppError(I,J,L) + 1.0
-!                ENDIF
-!             ENDIF
-!          ENDIF
-!       ENDIF
-!#endif
+#if defined( MODEL_GEOS )
+       ! TODO (ewl, 2/25/26)
+       ! The following code is not compatible with the MPI load balancing
+       ! implementation as is, and will need to be adapted in the future.
+       !! Mark integration as erroneous if negative concentrations so that
+       !! it will be repeated below (cakelle2, 2023/10/26)
+       !IF ( IERR >= 0 .AND. Input_Opt%KppCheckNegatives >= 0 ) THEN
+       !   IF ( ( Input_Opt%KppCheckNegatives==0 .AND. &
+       !        State_Met%InStratMeso(I,J,L) ) .OR. &
+       !        ( L > (  State_Grid%NZ - Input_Opt%KppCheckNegatives) ) ) THEN
+       !      IF ( ANY(C < 0.0_dp) ) THEN
+       !         IERR = -999
+       !         ! Include negative concentration boxes within error box
+       !         ! diagnostic
+       !         IF ( State_Diag%Archive_KppError ) THEN
+       !            State_Diag%KppError(I,J,L) = &
+       !                 State_Diag%KppError(I,J,L) + 1.0
+       !         ENDIF
+       !      ENDIF
+       !   ENDIF
+       !ENDIF
+#endif
 
        !==================================================================
        ! Try another time if it failed
@@ -1871,6 +1869,9 @@ CONTAINS
                 C = C_before_integrate
              ENDIF
 
+             ! TODO (ewl, 2/25/26)
+             ! The following code is not compatible with the MPI load balancing
+             ! implementation as is, and will need to be adapted in the future.
              !! Keep track of error boxes
              !IF ( State_Diag%Archive_KppError ) THEN
              !   State_Diag%KppError(I,J,L) = State_Diag%KppError(I,J,L) + 1.0
@@ -1887,7 +1888,7 @@ CONTAINS
              ! Print concentrations at failure grid box
              PRINT*, REPEAT( '#', 79 )
              PRINT*, '### KPP DEBUG OUTPUT!'
-             PRINT*, '### Species concentrations'! at problem box ', I, J, L
+             PRINT*, '### Species concentrations at problem box ', I_CELL
              PRINT*, REPEAT( '#', 79 )
              DO N = 1, NSPEC
                 PRINT*, C(N), TRIM( ADJUSTL( SPC_NAMES(N) ) )
@@ -1896,7 +1897,7 @@ CONTAINS
              ! Print rate constants at failure grid box
              PRINT*, REPEAT( '#', 79 )
              PRINT*, '### KPP DEBUG OUTPUT!'
-             PRINT*, '### Reaction rates'! at problem box ', I, J, L
+             PRINT*, '### Reaction rates at problem box ', I_CELL
              PRINT*, REPEAT( '#', 79 )
              DO N = 1, NREACT
                 PRINT*, RCONST(N), TRIM( ADJUSTL( EQN_NAMES(N) ) )
@@ -1950,8 +1951,6 @@ CONTAINS
        ! Optional debug:
        !  WRITE (6,'(A,I4,A,3(I6,1X),A,I8)') 'shm_rank=', shm_rank, &
        !            '  I,J,L=', I, J, L, '  NCELL_local=', N
-
-       IF (N.le.0) CYCLE
 
        ! Copy data back in
        C       = C_1D(:,N)
@@ -2052,27 +2051,27 @@ CONTAINS
        ! implementation as is, and will need to be adapted in the future.
        ! This call needs several things not defined for the case of
        ! load balancing: C_before_integrat, local_RCONST,
-       ! KPPH_before_integrate, ICNTRL, RCNTRL
-       !
-       ! Write chemical state to file for the kpp standalone interface
-       ! No external logic needed, this subroutine exits early if the
-       ! chemical state should not be printed (psturm, 03/23/24)
-       CALL KppSa_Write_Samples(                                             &
-            I            = I,                                                &
-            J            = J,                                                &
-            L            = L,                                                &
-            initC        = C_before_integrate,                               &
-            localRCONST  = local_RCONST,                                     &
-            initHvalue   = KPPH_before_integrate,                            &
-            exitHvalue   = RSTATE(Nhexit),                                   &
-            ICNTRL       = ICNTRL,                                           &
-            RCNTRL       = RCNTRL,                                           &
-            State_Grid   = State_Grid,                                       &
-            State_Chm    = State_Chm,                                        &
-            State_Met    = State_Met,                                        &
-            Input_Opt    = Input_Opt,                                        &
-            KPP_TotSteps = ISTATUS(3),                                       &
-            RC           = RC                                               )
+       ! KPPH_before_integrate, ICNTRL, RCNTRL. For now, MPI load balance is
+       ! turned off when building with KPP standalone turned on.
+       !! Write chemical state to file for the kpp standalone interface
+       !! No external logic needed, this subroutine exits early if the
+       !! chemical state should not be printed (psturm, 03/23/24)
+       !CALL KppSa_Write_Samples(                                             &
+       !     I            = I,                                                &
+       !     J            = J,                                                &
+       !     L            = L,                                                &
+       !     initC        = C_before_integrate,                               &
+       !     localRCONST  = local_RCONST,                                     &
+       !     initHvalue   = KPPH_before_integrate,                            &
+       !     exitHvalue   = RSTATE(Nhexit),                                   &
+       !     ICNTRL       = ICNTRL,                                           &
+       !     RCNTRL       = RCNTRL,                                           &
+       !     State_Grid   = State_Grid,                                       &
+       !     State_Chm    = State_Chm,                                        &
+       !     State_Met    = State_Met,                                        &
+       !     Input_Opt    = Input_Opt,                                        &
+       !     KPP_TotSteps = ISTATUS(3),                                       &
+       !     RC           = RC                                               )
 
        !=====================================================================
        ! Check we have no negative values and copy the concentrations
