@@ -1952,6 +1952,8 @@ CONTAINS
        !  WRITE (6,'(A,I4,A,3(I6,1X),A,I8)') 'shm_rank=', shm_rank, &
        !            '  I,J,L=', I, J, L, '  NCELL_local=', N
 
+       IF (N.le.0) CYCLE
+
        ! Copy data back in
        C       = C_1D(:,N)
        RCONST  = RCONST_1D(:,N)
