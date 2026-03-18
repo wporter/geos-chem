@@ -923,7 +923,7 @@ printf "\n     https://readthedocs.org/projects/gchp/\n\n"
 
 if [[ "x${sim_name}" == "xTransportTracers" ]]; then
     printf "\n\n*** NOTE: ExtData2G is now available as beta! ***\n"
-    printf " - New configuration file extdata.yaml is located to your run directory\n"
+    printf " - New configuration file extdata.yaml is located in your run directory\n"
     printf " - It is configured for use with MERRA2 meteorology at grid resolutions <= C180\n"
     printf " - Set Use_ExtData2G to true in setCommonRunSetting.sh to enable\n"
     printf " - Edit extdata.yaml for use with other meteorology sources or mass fluxes\n"
