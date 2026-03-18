@@ -640,9 +640,16 @@ cp ./setRestartLink.sh                ${rundir}
 cp ./checkRunSettings.sh              ${rundir}
 cp ./gitignore                        ${rundir}/.gitignore
 
+# Only copy extdata.yaml used in ExtData2G if using Transport Tracers
+# (extdata.yaml not yet available for other simulations)
+if [[ "x${sim_name}" == "xTransportTracers" ]]; then
+    cp ./ExtData2G.yaml.templates/extdata.yaml.${sim_name} ${rundir}/extdata.yaml
+fi
+
 # Copy file to auto-update common settings
 cp ./setCommonRunSettings.sh.template  ${rundir}/setCommonRunSettings.sh
 
+# Copy metrics.py file to computing global OH
 if [[ "x${sim_name}" == "xfullchem" || "x${sim_name}" == "xcarbon" ]]; then
     cp -r ${gcdir}/run/shared/metrics.py  ${rundir}
     chmod 744 ${rundir}/metrics.py
