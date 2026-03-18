@@ -874,14 +874,14 @@ CONTAINS
     !=======================================================================
     DO
 
-       ! Read a single line, and strip leading/trailing spaces
+       ! Read a single line, strip leading/trailing spaces,
        ! and keep track of the line number for error output
  500   CONTINUE
        Line    = ReadOneLine( fId, EOF, IOS, Squeeze=.TRUE. )
        LineNum = LineNum + 1
 
        ! Exit the loop if it's the end of the file
-       IF ( EOF ) EXIT
+       IF ( EOF ) GOTO 999
 
        ! If it's a real I/O error, quit w/ error message
        IF ( IOS > 0 ) THEN
@@ -1278,14 +1278,31 @@ CONTAINS
 
              ! This means skipping over all of the fields listed under
              ! this collection until we get to the :: separator
-             CALL Search_CollList( Input_Opt%amIRoot, CollList, CName, Found, RC )
+             CALL Search_CollList( Input_Opt%amIRoot, CollList,              &
+                                   CName,             Found,    RC          )
              IF ( .not. Found ) THEN
                 DO
+                   ! Read a single line, strip leading/trailing spaces,
+                   ! and keep track of the line number for error output
                    Line    = ReadOneLine( fId, EOF, IOS, Squeeze=.TRUE. )
                    LineNum = LineNum + 1
-                   CALL StrSqueeze( Line )
+
+                   ! Exit the loop if it's the end of the file
+                   IF ( EOF ) GOTO 999
+
+                   ! If it's a real I/O error, quit w/ error message
+                   IF ( IOS > 0 ) THEN
+                      ErrMsg = 'Unexpected end-of-file in "'              // &
+                           TRIM( Input_Opt%HistoryInputFile )
+                      WRITE( ErrorLine, 250 ) LineNum
+                      CALL GC_Error( ErrMsg, RC, ThisLoc, ErrorLine )
+                      RETURN
+                   ENDIF
+
+                   ! If it's the end of the collection, cycle to next line
                    IF ( TRIM( Line ) == '::' ) GOTO 500
                 ENDDO
+
              ENDIF
 
              !--------------------------------------------------------------
@@ -1697,11 +1714,12 @@ CONTAINS
                 ! first substring of the line.
                 !----------------------------------------------------------
 
-                ! Read a single line, and strip leading/trailing spaces
+                ! Read a single line, strip leading/trailing spaces,
+                ! and keep track of the line number for error output
                 Line    = ReadOneLine( fId, EOF, IOS, Squeeze=.TRUE. )
                 LineNum = LineNum + 1
 
-                ! IF we have hit the end of file then
+                ! Exit the loop if it's the end of the file
                 iF ( EOF ) GOTO 999
 
                 ! If it's a real I/O error, quit w/ error message
@@ -1889,12 +1907,28 @@ CONTAINS
 
              ! Search for this collection in the list of active collections
              ! and skip to the next collection if not found
-             CALL Search_CollList( Input_Opt%amIRoot, CollList, CName, Found, RC )
+             CALL Search_CollList( Input_Opt%amIRoot, CollList,              &
+                                   CName,             Found,    RC          )
              IF ( .not. Found ) THEN
                 DO
+                   ! Read a single line, strip leading/trailing spaces,
+                   ! and keep track of the line number for error output
                    Line    = ReadOneLine( fId, EOF, IOS, Squeeze=.TRUE. )
                    LineNum = LineNum + 1
-                   CALL StrSqueeze( Line )
+
+                   ! Exit the loop if it's the end of the file
+                   IF ( EOF ) GOTO 999
+
+                   ! If it's a real I/O error, quit w/ error message
+                   IF ( IOS > 0 ) THEN
+                      ErrMsg = 'Unexpected end-of-file in "'              // &
+                           TRIM( Input_Opt%HistoryInputFile )
+                      WRITE( ErrorLine, 250 ) LineNum
+                      CALL GC_Error( ErrMsg, RC, ThisLoc, ErrorLine )
+                      RETURN
+                   ENDIF
+
+                   ! If it's the end of the collection, cycle to next line
                    IF ( TRIM( Line ) == '::' ) GOTO 500
                 ENDDO
              ENDIF
