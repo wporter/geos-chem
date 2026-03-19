@@ -5,11 +5,6 @@ This file documents all notable changes to the GEOS-Chem repository starting in 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased] - TBD
-### Fixed
-- Fixed a syntax error in mass flux scaling calculation
-- Fixed an I/O error that caused an infinite loop reading when extra newlines are present at the end of `HISTORY.rc` (GC-Classic only)
-
-## [Unreleased] - TBD
 ### Added
 - Added `HTAP_SHIP` toggle in `HEMCO_Config.rc.carbon` templates for GC-Classic and GCHP
 - Added routines `Lookup_Grid` and `Register_State_Grid` to `Headers/state_grid_mod.F90`
@@ -30,15 +25,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Updated `run/GCHP/setCommonRunSettings.template` to disable the HEMCO PARANOx extension for C360 or C720 grids
 - Updated `createRunDir.sh` scripts for GC-Classic and GCHP to turn on offline bulk seasalt emissions and bulk dust emissions in TOMAS simulations
 - Updated `Interfaces/GCClassic/main.F90` to call`Print_Species_Global_Mass_from_VVDry` (instead of`Print_Species_Global_Mass`) in order to avoid numerical differences when verbose printout is on
-
+- Renamed `Carbon` collection to `ProdLoss` collection in GCClassic and GCHP `HISTORY.rc.carbon` templates
+  
 ### Fixed
 - Fixed incorrect unit conversion from v/v -> molec/cm3 in `planeflight_mod.F90`
 - Fixed typo in the call to `Finalize` for the `State_Diag%ProdOCPIfromOCPO` diagnostic array
+- Fixed a syntax error in mass flux scaling calculation
+- Fixed an I/O error that caused an infinite loop reading when extra newlines are present at the end of `HISTORY.rc` (GC-Classic only)
 
 ### Removed
 - Removed `ARCTAS_SHIP`, `CORBETT_SHIP`, `ICOADS_SHIP` from `HEMCO_Config.rc` template files
 - Retired Fung termite and soil absorption emission options from carbon simulation
 - Removed `GeosUtil/grid_registry_mod.F90`.
+- Removed `OHconcAfterChem` from GCClassic and GCHP `HISTORY.rc.carbon` templates, as OH is fixed during the simulation
 
 ## [14.7.0] - 2026-02-05
 ### Added
