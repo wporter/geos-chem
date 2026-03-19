@@ -28,7 +28,6 @@ EXPID:  ./OutputDir/GEOSChem
 # your own customized diagnostic collections as well.
 #==============================================================================
 COLLECTIONS: 'Restart',
-             'Metrics',
              'SpeciesConc',
              #'Budget',
              #'CloudConvFlux',
@@ -56,8 +55,8 @@ COLLECTIONS: 'Restart',
 # GEOS-Chem restart file fields
 #==============================================================================
   Restart.filename:           './Restarts/GEOSChem.Restart.%y4%m2%d2_%h2%n2z.nc4',
-  Restart.frequency:          'End',
-  Restart.duration:           'End',
+  Restart.frequency:          ${RUNDIR_HIST_TIME_AVG_FREQ},
+  Restart.duration:           ${RUNDIR_HIST_TIME_AVG_FREQ},
   Restart.mode:               'instantaneous'
   Restart.fields:             'SpeciesRst_?ALL?               ',
                               'Met_DELPDRY                    ',
@@ -341,13 +340,13 @@ COLLECTIONS: 'Restart',
   StateMetLevEdge.frequency:   ${RUNDIR_HIST_TIME_AVG_FREQ}
   StateMetLevEdge.duration:    ${RUNDIR_HIST_TIME_AVG_DUR}
   StateMetLevEdge.mode:        'time-averaged'
-  StateMetLevEdge.fields:      'Met_CMFMC                     ',
-                               'Met_PEDGE                     ',
-                               'Met_PEDGEDRY                  ',
-                               'Met_PFICU                     ',
-                               'Met_PFILSAN                   ',
-                               'Met_PFLCU                     ',
-                               'Met_PFLLSAN                   ',
+  StateMetLevEdge.fields:      'Met_PEDGE                     ',
+                               #'Met_CMFMC                     ',
+                               #'Met_PEDGEDRY                  ',
+                               #'Met_PFICU                     ',
+                               #'Met_PFILSAN                   ',
+                               #'Met_PFLCU                     ',
+                               #'Met_PFLLSAN                   ',
 ::
 #==============================================================================
 # %%%%% THE BoundaryConditions COLLECTION %%%%%

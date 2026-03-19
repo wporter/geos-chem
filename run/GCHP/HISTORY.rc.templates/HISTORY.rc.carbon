@@ -54,7 +54,6 @@ GRID_LABELS: #PE24x144-CF
 #==============================================================================
 COLLECTIONS: 'SpeciesConc',
              'Emissions',
-             #'Metrics',
              #'Budget',
              #'CloudConvFlux',
              #'FV3Dynamics',
@@ -151,19 +150,6 @@ COLLECTIONS: 'SpeciesConc',
                               'EmisOCS_BiomassBurn  ', 'GCHPchem',
                               'EmisOCS_MissingOcean ', 'GCHPchem',
                               'EmisOCS_Ocean        ', 'GCHPchem',
-::
-#==============================================================================
-  Metrics.template:           '%y4%m2%d2_%h2%n2z.nc4',
-  Metrics.frequency:          'End',
-  Metrics.duration:           'End',
-  Metrics.mode:               'time-averaged'
-  Metrics.fields:             'AirMassColumnFull         ', 'GCHPchem',
-                              'CH4emission               ', 'GCHPchem',
-                              'CH4massColumnFull         ', 'GCHPchem',
-                              'CH4massColumnTrop         ', 'GCHPchem',
-                              'LossOHbyCH4columnTrop     ', 'GCHPchem',
-                              'LossOHbyMCFcolumnTrop     ', 'GCHPchem',
-                              'OHwgtByAirMassColumnFull  ', 'GCHPchem',
 ::
 #==============================================================================
   SpeciesConc.template:       '%y4%m2%d2_%h2%n2z.nc4',
@@ -458,8 +444,8 @@ COLLECTIONS: 'SpeciesConc',
   StateMetLevEdge.frequency:      010000
   StateMetLevEdge.duration:       010000
   StateMetLevEdge.mode:           'time-averaged'
-  StateMetLevEdge.fields:         'Met_CMFMC   ', 'GCHPchem',
-                                  'Met_PEDGE   ', 'GCHPchem',
+  StateMetLevEdge.fields:         'Met_PEDGE   ', 'GCHPchem',
+                                  #'Met_CMFMC   ', 'GCHPchem',
                                   #'Met_PEDGEDRY', 'GCHPchem',
                                   #'Met_PFICU   ', 'GCHPchem',
                                   #'Met_PFILSAN ', 'GCHPchem',
