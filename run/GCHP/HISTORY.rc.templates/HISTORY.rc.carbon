@@ -65,7 +65,7 @@ COLLECTIONS: 'SpeciesConc',
              #'RxnConst',
              #'RxnRates',
              'StateMet',
-             #'StateMetLevEdge',
+             'StateMetLevEdge',
 ::
 #==============================================================================
 # Define collections
@@ -88,13 +88,13 @@ COLLECTIONS: 'SpeciesConc',
 #    (2) Frequency keyword sets frequency of data in each output file
 #
 #    (3) Duration keyword sets frequency of output file
-#  
+#
 #    (4) Mode keyword may be 'time-averaged' or 'instantaneous'
 #
 #    (5) See the GRID_LABELS sections above for details about output grids
 #
 #    (6) To output data on a grid other than native res global cubed sphere
-#        include the 'grid_label' field. For example, 
+#        include the 'grid_label' field. For example,
 #
 #           SpeciesConc.grid_label:   REGIONAL1x1
 #
@@ -205,10 +205,10 @@ COLLECTIONS: 'SpeciesConc',
                               'BudgetConvectionTrop_CH4      ', 'GCHPchem',
                               'BudgetConvectionPBL_CH4       ', 'GCHPchem',
                               'BudgetConvectionLevs1to35_CH4 ', 'GCHPchem',
-                              'BudgetChemistryFull_CH4      ', 'GCHPchem',
-                              'BudgetChemistryTrop_CH4      ', 'GCHPchem',
-                              'BudgetChemistryPBL_CH4       ', 'GCHPchem',
-                              'BudgetChemistryLevs1to35_CH4 ', 'GCHPchem',
+                              'BudgetChemistryFull_CH4       ', 'GCHPchem',
+                              'BudgetChemistryTrop_CH4       ', 'GCHPchem',
+                              'BudgetChemistryPBL_CH4        ', 'GCHPchem',
+                              'BudgetChemistryLevs1to35_CH4  ', 'GCHPchem',
                               'BudgetEmisDryDepFull_CO       ', 'GCHPchem',
                               'BudgetEmisDryDepTrop_CO       ', 'GCHPchem',
                               'BudgetEmisDryDepPBL_CO        ', 'GCHPchem',
@@ -233,7 +233,7 @@ COLLECTIONS: 'SpeciesConc',
                               'BudgetConvectionTrop_CO2      ', 'GCHPchem',
                               'BudgetConvectionPBL_CO2       ', 'GCHPchem',
                               'BudgetConvectionLevs1to35_CO2 ', 'GCHPchem',
-			                  'BudgetEmisDryDepFull_OCS      ', 'GCHPchem',
+                              'BudgetEmisDryDepFull_OCS      ', 'GCHPchem',
                               'BudgetEmisDryDepTrop_OCS      ', 'GCHPchem',
                               'BudgetEmisDryDepPBL_OCS       ', 'GCHPchem',
                               'BudgetEmisDryDepLevs1to35_OCS ', 'GCHPchem',
@@ -339,7 +339,12 @@ COLLECTIONS: 'SpeciesConc',
   RxnRates.mode:              'time-averaged'
   RxnRates.fields:            'RxnRate_EQ0001 ', 'GCHPchem',
                               'RxnRate_EQ0002 ', 'GCHPchem',
-			      # ... add others as needed ...
+                              'RxnRate_EQ0003 ', 'GCHPchem',
+                              'RxnRate_EQ0004 ', 'GCHPchem',
+                              'RxnRate_EQ0005 ', 'GCHPchem',
+                              'RxnRate_EQ0006 ', 'GCHPchem',
+                              'RxnRate_EQ0007 ', 'GCHPchem',
+                              'RxnRate_EQ0008 ', 'GCHPchem',
 ::
 #==============================================================================
   RxnConst.template:          '%y4%m2%d2_%h2%n2z.nc4',
@@ -350,7 +355,12 @@ COLLECTIONS: 'SpeciesConc',
   RxnConst.mode:              'time-averaged'
   RxnConst.fields:            'RxnConst_EQ0001 ', 'GCHPchem',
                               'RxnConst_EQ0002 ', 'GCHPchem',
-			      # ... add others as needed ...
+                              'RxnConst_EQ0003 ', 'GCHPchem',
+                              'RxnConst_EQ0004 ', 'GCHPchem',
+                              'RxnConst_EQ0005 ', 'GCHPchem',
+                              'RxnConst_EQ0006 ', 'GCHPchem',
+                              'RxnConst_EQ0007 ', 'GCHPchem',
+                              'RxnConst_EQ0008 ', 'GCHPchem',
 ::
 #==============================================================================
   StateMet.template:       '%y4%m2%d2_%h2%n2z.nc4',

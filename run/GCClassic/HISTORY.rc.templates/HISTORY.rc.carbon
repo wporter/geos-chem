@@ -1,5 +1,5 @@
 ###############################################################################
-###  HISTORY.rc file for GEOS-Chem aerosol-only specialty simulations       ###
+###  HISTORY.rc file for GEOS-Chem carbon simulation                        ###
 ###  Contact: GEOS-Chem Support Team (geos-chem-support@g.harvard.edu)      ###
 ###############################################################################
 
@@ -28,16 +28,19 @@ EXPID:  ./OutputDir/GEOSChem
 # your own customized diagnostic collections as well.
 #==============================================================================
 COLLECTIONS: 'Restart',
+             'Metrics',
              'SpeciesConc',
              #'Budget',
              #'CloudConvFlux',
-             #'DryDep',
+             #'ConcAfterChem',
+             #'KppDiags',
              'ProdLoss',
+             #'RxnConst',
+             #'RxnRates',
              #'SatDiagn',
              #'SatDiagnEdge',
-             #'StateChm',
              'StateMet',
-             #'StateMetLevEdge',
+             'StateMetLevEdge',
              #'BoundaryConditions',
 ::
 ###############################################################################
@@ -107,10 +110,6 @@ COLLECTIONS: 'Restart',
                        'BudgetConvectionTrop_?ADV?           ',
                        'BudgetConvectionPBL_?ADV?            ',
                        'BudgetConvectionLevs1to35_?ADV?      ',
-                       'BudgetWetDepFull_?WET?               ',
-                       'BudgetWetDepTrop_?WET?               ',
-                       'BudgetWetDepPBL_?WET?                ',
-                       'BudgetWetDepLevs1to35_?WET?          ',
 ::
 #==============================================================================
 # %%%%% THE CloudConvFlux COLLECTION %%%%%
@@ -124,18 +123,27 @@ COLLECTIONS: 'Restart',
   CloudConvFlux.fields:       'CloudConvFlux_?ADV?           ',
 ::
 #==============================================================================
-# %%%%% THE DryDep COLLECTION %%%%%
+# %%%%% THE KppDiags COLLECTION %%%%%
 #
-# Dry depositon fluxes and velocities (for all dry-depositing species)
+# Diagnostics from the KPP solver.
+#
+# NOTE: The carbon simulation uses the Forward Euler (feuler) solver, which
+# has no internal timestepping loop.  Therefore many of these diagnostics
+# will have little or no variation across grid boxes.
 #==============================================================================
-  DryDep.template:            '%y4%m2%d2_%h2%n2z.nc4',
-  DryDep.frequency:           ${RUNDIR_HIST_TIME_AVG_FREQ}
-  DryDep.duration:            ${RUNDIR_HIST_TIME_AVG_DUR}
-  DryDep.mode:                'time-averaged'
-  DryDep.fields:              'DryDepVel_?DRY?               ',
-                              'DryDep_?DRY?                  ',
-                              #'DryDepChm_?DRY?              ',
-                              #'DryDepMix_?DRY?              ',
+  KppDiags.template:          '%y4%m2%d2_%h2%n2z.nc4',
+  KppDiags.frequency:         ${RUNDIR_HIST_TIME_AVG_FREQ}
+  KppDiags.duration:          ${RUNDIR_HIST_TIME_AVG_DUR}
+  KppDiags.mode:              'time-averaged'
+  KppDiags.fields:            'KppIntCounts                  ',
+                              'KppJacCounts                  ',
+                              'KppTotSteps                   ',
+                              'KppAccSteps                   ',
+                              'KppRejSteps                   ',
+                              'KppLuDecomps                  ',
+                              'KppSubsts                     ',
+                              'KppSmDecomps                  ',
+                              'KppTime                       ',
 ::
 #==============================================================================
 # %%%%% THE ProdLoss COLLECTION %%%%%
@@ -151,6 +159,51 @@ COLLECTIONS: 'Restart',
                              'ProdCO2fromCO                  ',
 ::
 #==============================================================================
+# %%%%% THE RxnConst COLLECTION %%%%%
+#
+# Archives chemical reaction rates constants from the KPP solver.
+# It is best to list individual reactions to avoid using too much memory.
+# Reactions should be listed as "RxnConst_EQnnnn", where nnnn is the reaction
+# index as listed in KPP/fullchem/gckpp_Monitor.F90 (pad zeroes as needed).
+#
+# The units of reaction rate constants vary according to the number of
+# reactants in the reaction.
+#==============================================================================
+  RxnConst.template:          '%y4%m2%d2_%h2%n2z.nc4',
+  RxnConst.frequency:         ${RUNDIR_HIST_TIME_AVG_FREQ}
+  RxnConst.duration:          ${RUNDIR_HIST_TIME_AVG_DUR}
+  RxnConst.mode:              'time-averaged'
+  RxnConst.fields:            'RxnConst_EQ0001                ',
+                              'RxnConst_EQ0002                ',
+                              'RxnConst_EQ0003                ',
+                              'RxnConst_EQ0004                ',
+                              'RxnConst_EQ0005                ',
+                              'RxnConst_EQ0006                ',
+                              'RxnConst_EQ0007                ',
+                              'RxnConst_EQ0008                ',
+::
+#==============================================================================
+# %%%%% THE RxnRates COLLECTION %%%%%
+#
+# Archives chemical reaction rates from the KPP solver.
+# It is best to list individual reactions to avoid using too much memory.
+# Reactions should be listed as "RxnRate_EQnnnn", where nnnn is the reaction
+# index as listed in KPP/fullchem/gckpp_Monitor.F90 (pad zeroes as needed).
+#==============================================================================
+  RxnRates.template:          '%y4%m2%d2_%h2%n2z.nc4',
+  RxnRates.frequency:         ${RUNDIR_HIST_TIME_AVG_FREQ}
+  RxnRates.duration:          ${RUNDIR_HIST_TIME_AVG_DUR}
+  RxnRates.mode:              'time-averaged'
+  RxnRates.fields:            'RxnRate_EQ0001                 ',
+                              'RxnRate_EQ0002                 ',
+                              'RxnRate_EQ0003                 ',
+                              'RxnRate_EQ0004                 ',
+                              'RxnRate_EQ0005                 ',
+                              'RxnRate_EQ0006                 ',
+                              'RxnRate_EQ0007                 ',
+                              'RxnRate_EQ0008                 ',
+::
+#==============================================================================
 # %%%%% THE SatDiagn COLLECTION %%%%%
 #
 # GEOS-Chem data during satellite overpass
@@ -161,30 +214,22 @@ COLLECTIONS: 'Restart',
   SatDiagn.duration:          00000100 000000
   SatDiagn.hrrange:           11.98 15.02
   SatDiagn.mode:              'time-averaged'
-  SatDiagn.fields:            'SatDiagnConc_BCPI              ',
-                              'SatDiagnConc_BCPO              ',
+  SatDiagn.fields:            'SatDiagnConc_CH4               ',
+                              'SatDiagnConc_CO                ',
+                              'SatDiagnConc_CO2               ',
+                              'SatDiagnConc_OCS               ',
+                              'SatDiagnOH                     ',
                               'SatDiagnRH                     ',
                               'SatDiagnAirDen                 ',
                               'SatDiagnBoxHeight              ',
-                              'SatDiagnPEdge                  ',
                               'SatDiagnTROPP                  ',
                               'SatDiagnPBLHeight              ',
                               'SatDiagnPBLTop                 ',
-                              'SatDiagnPMID                   ',
-                              'SatDiagnTAir                   ',
-                              'SatDiagnSLP                    ',
-                              'SatDiagnSPHU                   ',
-                              'SatDiagnTS                     ',
                               'SatDiagnPBLTOPL                ',
+                              'SatDiagnPMID                   ',
                               'SatDiagnMODISLAI               ',
-                              'SatDiagnWetLossLS_BCPI         ',
-                              'SatDiagnWetLossConv_BCPI       ',
-                              'SatDiagnDryDep_BCPI            ',
-                              'SatDiagnDryDepVel_BCPI         ',
-                              'SatDiagnColEmis_BCPI           ',
-                              'SatDiagnSurfFlux_BCPI          ',
-                              'SatDiagnProd_?PRD?             ',
-                              'SatDiagnLoss_?LOS?             ',
+                              'SatDiagnColEmis_CH4            ',
+                              'SatDiagnSurfFlux_CH4           ',
 ::
 #==============================================================================
 # %%%%% THE SatDiagnEdge COLLECTION %%%%%
@@ -198,40 +243,6 @@ COLLECTIONS: 'Restart',
   SatDiagnEdge.hrrange:       11.98 15.02
   SatDiagnEdge.mode:          'time-averaged'
   SatDiagnEdge.fields:        'SatDiagnPEDGE                  ',
-::
-#==============================================================================
-# %%%%% THE StateChm COLLECTION %%%%%
-#
-# Fields of the State_Chm object (see also Aerosols collection)
-#
-# Available for full-chemistry and aerosols-only simulations
-#==============================================================================
-  StateChm.template:          '%y4%m2%d2_%h2%n2z.nc4',
-  StateChm.frequency:         ${RUNDIR_HIST_TIME_AVG_FREQ}
-  StateChm.duration:          ${RUNDIR_HIST_TIME_AVG_DUR}
-  StateChm.mode:              'time-averaged'
-  StateChm.fields:            'Chem_IsorropAeropHAccum       ',
-                              'Chem_IsorropAeropHCoarse      ',
-                              'Chem_IsorropHplusAccum        ',
-                              'Chem_IsorropHplusCoarse       ',
-                              'Chem_IsorropAeroH2OAccum      ',
-                              'Chem_IsorropAeroH2OCoarse     ',
-                              'Chem_IsorropSulfate           ',
-                              'Chem_IsorropNitrateAccum      ',
-                              'Chem_IsorropNitrateCoarse     ',
-                              'Chem_IsorropChlorideAccum     ',
-                              'Chem_IsorropChlorideCoarse    ',
-                              'Chem_IsorropBisulfate         ',
-                              'Chem_pHCloud                  ',
-                              'Chem_isCloud                  ',
-                              'Chem_SSAlkAccumMode           ',
-                              'Chem_SSAlkCoarseMode          ',
-                              'Chem_HSO3AQ                   ',
-                              'Chem_SO3AQ                    ',
-                              'Chem_fupdateHOBr              ',
-                              'Chem_GammaN2O5overall         ',
-                              'Chem_GammaN2O5fine            ',
-                              'Chem_YieldClNO2fine           ',
 ::
 #==============================================================================
 # %%%%% The StateMet COLLECTION %%%%%
@@ -342,8 +353,6 @@ COLLECTIONS: 'Restart',
 # %%%%% THE BoundaryConditions COLLECTION %%%%%
 #
 # GEOS-Chem boundary conditions for use in nested grid simulations
-#
-# Available for all simulations
 #
 # NOTE: Do not change the BoundaryConditions.frequency setting below,
 # because GEOS-Chem nested-grid simulations expect to read boundary
