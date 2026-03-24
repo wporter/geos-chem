@@ -18,7 +18,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Added `cloud-j:verbose` YAML tag (with default setting `false`) to  `geoschem_config.yml` templates for GC-Classic, GCHP, GEOS, CESM, and WRF
 - Added routine `Print_Species_Global_Mass_From_VVDry` in `GeosUtil/print_mod.F90`
 - Added build setting `MPI_LOAD_BALANCE` to enable MPI load balancing in chemistry to speed up GCHP runs
-- Add carbon Jacobian tracer simulation using KPP as a build-time option for use with the Integrated Methane Inversion
+- Added carbon Jacobian tracer simulation using KPP as a build-time option for use with the Integrated Methane Inversion
+- Added script within new folder KPP/carbon/util to expand carbon.eqn to include any number of CH4 Jacobian tracers
 
 ### Changed
 - Update termite CH4 emissions to the CAMS-GLOB-TERM_v1.1 product
