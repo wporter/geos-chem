@@ -25,6 +25,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Added `&DSTbinproperties` and `&METALSproperties` YAML anchors in `run/shared/species_database.yml`
 - Added `DustL23M` as HEMCO extension 125 in `HEMCO_Config.rc.aerosol` and `HEMCO_Config.rc.fullchem` templates
 - Added `${RUNDIR_READ_RESTART_AS_REAL8}` to GEOS-Chem Classic  `geoschem_config.yml` template files
+- Added error trap to routine `Get_GC_Restart` to halt simulations that use `read_restart_as_real8: true` with a reduced vertical grid
 
 ### Changed
 - Replaced comments in template HEMCO configuration files directing users to obsolete wiki documentation with comments directing users to `hemco.readthedocs.io`
