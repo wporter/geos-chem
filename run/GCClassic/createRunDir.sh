@@ -872,7 +872,7 @@ printf "${thinline}Choose number of levels:${thinline}"
 if [[ ${met} = "geosfp" ]] || [[ ${met} = "merra2" || ${met} = "geosit" ]]; then
     printf "  1. 72 (native)\n"
     printf "  2. 47 (reduced)\n"
-
+    grid_lev=""
     valid_lev=0
     while [ "${valid_lev}" -eq 0 ]; do
         read -p "${USER_PROMPT}" lev_num
@@ -1181,6 +1181,47 @@ else
     RUNDIR_VARS+="$(cat ${gcdir}/run/shared/settings/gmao_hemco.txt)\n"
 fi
 
+#--------------------------------------------------------------------
+# Determine if we are to read the restart file as REAL*8 or not
+#--------------------------------------------------------------------
+if [[ "x${sim_name}" == "xfullchem" ]]; then
+    if [[ "x${sim_extra_option}" == "xbenchmark" ]]; then
+
+	# Fullchem + benchmark simulation
+	# 72L: Read restart as REAL*8 via GEOS-Chem (for mass conservation   )
+	# 47L: Read restart as REAL*4 via HEMCO     (for 72L -> 47L remapping)
+	if [[ "x${grid_lev}" == "x47L" ]]; then
+	    RUNDIR_VARS+="RUNDIR_READ_RESTART_AS_REAL8='false'\n"
+	else
+	    RUNDIR_VARS+="RUNDIR_READ_RESTART_AS_REAL8='true '\n"
+	fi
+
+    else
+
+	# Other fullchem simulations
+	# Always read restart as REAL*4 via HEMCO (for 72L -> 47L remapping)
+	RUNDIR_VARS+="RUNDIR_READ_RESTART_AS_REAL8='false'\n"
+    fi
+
+elif [[ "x${sim_name}" == "xTransportTracers" ]]; then
+
+    # TransportTracers simulation
+    # 72L: Read restart as REAL*8 via GEOS-Chem (for mass conservation   )
+    # 47L: Read restart as REAL*4 via HEMCO     (for 72L -> 47L remapping)
+    if [[ "x${grid_lev}" == "x47L" ]]; then
+	RUNDIR_VARS+="RUNDIR_READ_RESTART_AS_REAL8='false'\n"
+    else
+	RUNDIR_VARS+="RUNDIR_READ_RESTART_AS_REAL8='true '\n"
+    fi
+
+else
+    
+    # All other simulations
+    # Always read restart file as REAL*4 a (allows 72L -> 47L remapping)
+    RUNDIR_VARS+="RUNDIR_READ_RESTART_AS_REAL8='false'\n"
+
+fi
+    
 #--------------------------------------------------------------------
 # Replace settings in config files with RUNDIR variables
 #--------------------------------------------------------------------
