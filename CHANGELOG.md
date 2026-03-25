@@ -24,6 +24,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Added clarifying comments in `flexgrid_read_met_mod.F90` for `TS` and `T2M` met fields
 - Added `&DSTbinproperties` and `&METALSproperties` YAML anchors in `run/shared/species_database.yml`
 - Added `DustL23M` as HEMCO extension 125 in `HEMCO_Config.rc.aerosol` and `HEMCO_Config.rc.fullchem` templates
+- Added `${RUNDIR_READ_RESTART_AS_REAL8}` to GEOS-Chem Classic  `geoschem_config.yml` template files
 
 ### Changed
 - Replaced comments in template HEMCO configuration files directing users to obsolete wiki documentation with comments directing users to `hemco.readthedocs.io`
@@ -57,6 +58,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Replace hardwired values with constant parameters in routine `Aerosol_Conc` (in `GeosCore/aerosol_mod.F90`
 - Updated species database so that dust species use the anchor `&DSTbin properties` and metals species use `&METALSproperties`
 - Updated call to `ExtData_Set` in `hco_gc_interface_mod.F90` to accept `ExtState%SNOMAS`
+- Moved logic to determine whether we read the restart file as
+  `REAL*8` from `run/shared/setupConfigFiles.sh` to `run/GCClassic/createRunDir.sh`
 
 ### Fixed
 - Restored entries for TMB emissions in `HEMCO_Config.rc.fullchem` template files for GCClassic and GCHP
