@@ -1626,9 +1626,9 @@ CONTAINS
    LOGICAL                   :: FOUND_DELP_DRY     ! Found layer delta P in restart?
    CHARACTER(LEN=60)         :: Prefix             ! utility string
    CHARACTER(LEN=255)        :: LOC                ! routine location
-   CHARACTER(LEN=255)        :: MSG                ! message
    CHARACTER(LEN=255)        :: v_name_in_hemco    ! variable name in HEMCO
    CHARACTER(LEN=255)        :: v_name_in_file     ! variable name in restart file
+   CHARACTER(LEN=512)        :: MSG                ! message
    REAL(fp)                  :: SMALL_NUM          ! small number threshold
 
    ! Temporary arrays and pointers
@@ -1789,9 +1789,12 @@ CONTAINS
          CALL NcGet_DimLen( fId, 'lev', L )
          IF ( L /= State_Grid%NZ ) THEN
             MSG = "The GEOS-Chem restart file cannot be read as REAL*8 "  // &
-                  "for simulations using a reduced vertical grid. "       // &
-                  "Please set 'read_restart_as_real8: false' in your "    // &
-                  "geoschem_config.yml configuration file."
+                  "for simulations with a different vertical grid than "  // &
+                  "the restart file. This is because reading the "        // &
+                  "restart file as REAL*8 bypasses HEMCO vertical "       // &
+                  "remapping. Please set 'read_restart_as_real8: false' " // &
+                  "in your 'geoschem_config.yml' configuration file "     // &
+                  "and run your simulation again."
             CALL GC_Error( Msg, RC, Loc )
             RETURN
          ENDIF

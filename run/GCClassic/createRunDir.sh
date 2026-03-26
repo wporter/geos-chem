@@ -1183,45 +1183,22 @@ fi
 
 #--------------------------------------------------------------------
 # Determine if we are to read the restart file as REAL*8 or not
+#
+# 1. fullchem+benchmark and 72L : Read as REAL*8 via GEOS-Chem
+# 2. TransportTracers and 72L   : Read as REAL*8 via GEOS-Chem
+# 3. Everything else            : Read as REAL*4 via HEMCO
 #--------------------------------------------------------------------
-if [[ "x${sim_name}" == "xfullchem" ]]; then
-    if [[ "x${sim_extra_option}" == "xbenchmark" ]]; then
-
-	# Fullchem + benchmark simulation
-	# 72L: Read restart as REAL*8 via GEOS-Chem (for mass conservation   )
-	# 47L: Read restart as REAL*4 via HEMCO     (for 72L -> 47L remapping)
-	if [[ "x${grid_lev}" == "x47L" ]]; then
-	    RUNDIR_VARS+="RUNDIR_READ_RESTART_AS_REAL8='false'\n"
-	else
-	    RUNDIR_VARS+="RUNDIR_READ_RESTART_AS_REAL8='true '\n"
-	fi
-
-    else
-
-	# Other fullchem simulations
-	# Always read restart as REAL*4 via HEMCO (for 72L -> 47L remapping)
-	RUNDIR_VARS+="RUNDIR_READ_RESTART_AS_REAL8='false'\n"
-    fi
-
-elif [[ "x${sim_name}" == "xTransportTracers" ]]; then
-
-    # TransportTracers simulation
-    # 72L: Read restart as REAL*8 via GEOS-Chem (for mass conservation   )
-    # 47L: Read restart as REAL*4 via HEMCO     (for 72L -> 47L remapping)
-    if [[ "x${grid_lev}" == "x47L" ]]; then
-	RUNDIR_VARS+="RUNDIR_READ_RESTART_AS_REAL8='false'\n"
-    else
-	RUNDIR_VARS+="RUNDIR_READ_RESTART_AS_REAL8='true '\n"
-    fi
-
-else
-    
-    # All other simulations
-    # Always read restart file as REAL*4 a (allows 72L -> 47L remapping)
-    RUNDIR_VARS+="RUNDIR_READ_RESTART_AS_REAL8='false'\n"
-
+real8='false'
+if [[ "x${sim_name}"         == "xfullchem"              && \
+      "x${sim_extra_option}" == "xbenchmark"         ]]  || \
+   [[ "x${sim_name}"         == "xTransportTracers"  ]]; then
+    real8='true'
 fi
-    
+if [[ "x${grid_lev}" == "x47L" ]]; then
+    real8='false'
+fi
+RUNDIR_VARS+="RUNDIR_READ_RESTART_AS_REAL8='${real8}'\n"
+
 #--------------------------------------------------------------------
 # Replace settings in config files with RUNDIR variables
 #--------------------------------------------------------------------
