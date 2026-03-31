@@ -2311,6 +2311,10 @@ CONTAINS
     LOGICAL                      :: isStartTime
     REAL(ESMF_KIND_r8), POINTER  :: CostFuncMask(:,:,:) => NULL()
 #endif
+#ifdef JACOBIAN
+    INTEGER                      :: primarySpcId
+    CHARACTER(len=ESMF_MAXSTR)   :: primarySpcName
+#endif
 
     __Iam__('Run_')
 
@@ -2694,8 +2698,13 @@ CONTAINS
                   VALUE=RST, RC=STATUS )
 
              ! Set spc conc to background value if rst skipped or var not there
-             IF ( (RC /= ESMF_SUCCESS .OR. RST == MAPL_RestartBootstrap .OR.   &
-                  RST == MAPL_RestartSkipInitial) .AND. (.not. ThisSpc%Is_JacobianTracer) ) THEN
+             IF ( ( RC  /= ESMF_SUCCESS           .OR.     &
+                    RST == MAPL_RestartBootstrap  .OR.     &
+                    RST == MAPL_RestartSkipInitial  )      &
+#ifdef JACOBIAN
+                    .AND. .NOT. ThisSpc%Is_JacobianTracer  &
+#endif
+                    ) THEN
                 DO L = 1, State_Grid%NZ
                 DO J = 1, State_Grid%NY
                 DO I = 1, State_Grid%NX
@@ -2717,15 +2726,19 @@ CONTAINS
                 ENDIF
              ENDIF
 
+#ifdef JACOBIAN
              ! Do special handling if this is a Jacobian tracer             
              IF ( ThisSpc%Is_JacobianTracer ) THEN
-                State_Chm%Species(IND)%Conc = State_Chm%Species(IND_('CH4'))%Conc
+                primarySpcName = ThisSpc%Name(1:LEN(trim(ThisSpc%Name))-8)
+                primarySpcId = IND_(trim(primarySpcName))
+                State_Chm%Species(IND)%Conc = State_Chm%Species(primarySpcId)%Conc
                 IF ( MAPL_am_I_Root()) THEN
-                   WRITE(*,*)  &
-                        '   INFO: using the initial concentrations of CH4'&
-                        //' for the Jacobian tracer '//trim(ThisSpc%Name) 
+                   WRITE(*,*) '   INFO: using the initial concentration of ' &
+                        // trim(primarySpcName) //' for the Jacobian tracer ' &
+                        // trim(ThisSpc%Name)
                 ENDIF
              ENDIF
+#endif
 
              ThisSpc => NULL()
           ENDDO
