@@ -26,7 +26,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Updated `createRunDir.sh` scripts for GC-Classic and GCHP to turn on offline bulk seasalt emissions and bulk dust emissions in TOMAS simulations
 - Updated `Interfaces/GCClassic/main.F90` to call`Print_Species_Global_Mass_from_VVDry` (instead of`Print_Species_Global_Mass`) in order to avoid numerical differences when verbose printout is on
 - Renamed `Carbon` collection to `ProdLoss` collection in GCClassic and GCHP `HISTORY.rc.carbon` templates
-  
+- Updated GitHub Action `stale@v5` to `stale@v10` in order to avoid deprecation warnings
+
 ### Fixed
 - Fixed incorrect unit conversion from v/v -> molec/cm3 in `planeflight_mod.F90`
 - Fixed typo in the call to `Finalize` for the `State_Diag%ProdOCPIfromOCPO` diagnostic array
