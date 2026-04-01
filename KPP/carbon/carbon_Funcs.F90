@@ -564,8 +564,8 @@ CONTAINS
 
     ! Define flags for species ID's
     id_CH4      = Ind_('CH4')
-    id_CO       = Ind_('CO2')
-    id_CO2      = Ind_('CO' )
+    id_CO       = Ind_('CO' ) 
+    id_CO2      = Ind_('CO2')
 
     ! Set kg species / molec species
     xnumol_CH4  = kgmolec_CH4
