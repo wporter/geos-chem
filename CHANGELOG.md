@@ -20,6 +20,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Added error traps to prevent integration tests and parallel tests from running if a conda environment with netCDF is active
 - Added GCHP run option in setCommonRunSettings.sh to use ExtData2G
 - Added ExtData2G yaml configuration file for GCHP transport tracer simulation
+- Added `${RUNDIR_READ_RESTART_AS_REAL8}` to GEOS-Chem Classic  `geoschem_config.yml` template files
+- Added error trap to routine `Get_GC_Restart` to halt simulations that use `read_restart_as_real8: true` with a reduced vertical grid
 
 ### Changed
 - Update termite CH4 emissions to the CAMS-GLOB-TERM_v1.1 product
@@ -32,6 +34,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Updated `Interfaces/GCClassic/main.F90` to call`Print_Species_Global_Mass_from_VVDry` (instead of`Print_Species_Global_Mass`) in order to avoid numerical differences when verbose printout is on
 - Renamed `Carbon` collection to `ProdLoss` collection in GCClassic and GCHP `HISTORY.rc.carbon` templates
 - Updated GitHub Action `stale@v5` to `stale@v10` in order to avoid deprecation warnings
+- Moved logic to determine whether we read the restart file as `REAL*8` from `run/shared/setupConfigFiles.sh` to `run/GCClassic/createRunDir.sh`
 
 ### Fixed
 - Fixed incorrect unit conversion from v/v -> molec/cm3 in `planeflight_mod.F90`
