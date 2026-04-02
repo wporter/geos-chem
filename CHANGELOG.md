@@ -17,6 +17,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Added build setting `MPI_LOAD_BALANCE` to enable MPI load balancing in chemistry to speed up GCHP runs
 - Added carbon Jacobian tracer simulation using KPP as a build-time option for use with the Integrated Methane Inversion
 - Added script within new folder KPP/carbon/util to expand carbon.eqn to include any number of CH4 Jacobian tracers
+- Added error traps to prevent integration tests and parallel tests from running if a conda environment with netCDF is active
 
 ### Changed
 - Update termite CH4 emissions to the CAMS-GLOB-TERM_v1.1 product
