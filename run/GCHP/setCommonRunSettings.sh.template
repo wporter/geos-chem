@@ -396,6 +396,13 @@ fi
 
 Model_Phase=FORWARD
 
+#------------------------------------------------
+#   MAPL ExtData versions
+#------------------------------------------------
+# Set to true to use ExtData2G in MAPL (requires yaml input file)
+
+Use_ExtData2G=false
+
 
 ###############################
 ####   ERROR CHECKS
@@ -692,6 +699,18 @@ print_msg "------------------"
 replace_val NX            ${NX}                 GCHP.rc
 replace_val NY            ${NY}                 GCHP.rc
 replace_val CoresPerNode  ${NUM_CORES_PER_NODE} HISTORY.rc
+
+###  Set which version of ExtData will be used
+if [[ ${Use_ExtData2G} == "true" ]]; then
+    replace_val USE_EXTDATA2G  .TRUE.   CAP.rc
+    replace_val USE_EXTDATA2G  .true.   GCHP.rc
+elif [[ ${Use_ExtData2G} == "false" ]]; then
+    replace_val USE_EXTDATA2G  .FALSE. CAP.rc
+    replace_val USE_EXTDATA2G  .false. GCHP.rc
+else
+    echo "ERROR: Use_ExtData2G in setCommonRunSettings.sh must be either true or false."
+    exit 1
+fi
 
 ###  Make sure adjoint diagnostics (if present) are commented out if using
 ### forward model, and uncommented if using adjoint.

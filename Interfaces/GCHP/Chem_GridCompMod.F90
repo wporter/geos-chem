@@ -139,6 +139,7 @@ MODULE Chem_GridCompMod
   LOGICAL                          :: met_wind_is_top_down
   LOGICAL                          :: met_humidity_is_top_down
   LOGICAL                          :: met_nonadv_is_top_down
+  LOGICAL                          :: use_extdata2g
 
 #if defined( MODEL_GEOS )
   ! Is GEOS-Chem the provider for AERO, RATS, and/or Analysis OX?
@@ -460,8 +461,13 @@ CONTAINS
 #endif
 
     !=======================================================================
-    ! Get meteorology vertical index orientation
+    ! Get meteorology vertical index orientation and ExtData version.
+    ! Whether met will be flipped to be bottom-up is dependent on ExtData
+    ! version (1G requires flipping here, while 2G already flipped by MAPL)
     !=======================================================================
+    call ESMF_ConfigGetAttribute(myState%myCF,value=use_extdata2g, &
+         label='USE_EXTDATA2G:', Default=.false., __RC__ )
+
     call ESMF_ConfigGetAttribute(myState%myCF,value=met_wind_is_top_down, &
          label='MET_WIND_IS_TOP_DOWN:', Default=.false., __RC__ )
 
@@ -470,11 +476,27 @@ CONTAINS
 
     call ESMF_ConfigGetAttribute(myState%myCF,value=met_nonadv_is_top_down, &
          label='MET_NONADVECTION_IS_TOP_DOWN:', Default=.false., __RC__ )
-    if (met_nonadv_is_top_down) then
-       call lgr%info('Configured to expect ''top-down'' for non-advection met-fields')
+
+    ! Print information to log about expectation of vertical direction of met-fields
+    if ( use_extdata2g ) then
+       call lgr%info('Using MAPL ExtData2G; all ''top-down'' meteorological data is automatically flipped to ''bottom-up'' within MAPL')
     else
-       call lgr%info('Configured to expect ''bottom-up'' for non-advection met-fields')
-    end if
+       if (met_wind_is_top_down) then
+          call lgr%info('Configured to expect ''top-down'' wind met-field imports in Chem_GridCompMod')
+       else
+          call lgr%info('Configured to expect ''bottom-up'' wind met-field imports in Chem_GridCompMod')
+       end if
+       if (met_humidity_is_top_down) then
+          call lgr%info('Configured to expect ''top-down'' for humidity met-field imports in Chem_GridCompMod')
+       else
+          call lgr%info('Configured to expect ''bottom-up'' for humidity met-field imports in Chem_GridCompMod')
+       end if
+       if (met_nonadv_is_top_down) then
+          call lgr%info('Configured to expect ''top-down'' for non-advection met-field imports in Chem_GridCompMod')
+       else
+          call lgr%info('Configured to expect ''bottom-up'' for non-advection met-field imports in Chem_GridCompMod')
+       end if
+    endif
 
 #if defined( MODEL_GEOS )
     ! Define imports to fill met fields needed for lightning
