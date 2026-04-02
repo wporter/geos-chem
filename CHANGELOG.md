@@ -41,6 +41,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Fixed typo in the call to `Finalize` for the `State_Diag%ProdOCPIfromOCPO` diagnostic array
 - Fixed a syntax error in mass flux scaling calculation
 - Fixed an I/O error that caused an infinite loop reading when extra newlines are present at the end of `HISTORY.rc` (GC-Classic only)
+- Fixed timestep mismatch between GCHP C180 and GCC 0.5x0.625
 
 ### Removed
 - Removed `ARCTAS_SHIP`, `CORBETT_SHIP`, `ICOADS_SHIP` from `HEMCO_Config.rc` template files
