@@ -1332,18 +1332,68 @@ CONTAINS
 !
 ! !LOCAL VARIABLES:
 !
+    ! Scalars
     INTEGER :: L
 
-    ! State_Met%MaxStratLev is the 1 hPa level
-    ! State_Met%MaxChemLev is set to State_Chm%MaxStratLev by default
-    ! (but this could be defined differently if desired)
-    DO L = State_Grid%NZ+1, 1, -1
-       IF ( Get_Ap(L) > 1.0 ) THEN
-          State_Met%MaxStratLev = L
-          State_Met%MaxChemLev  = L
-          EXIT
-       ENDIF
-    ENDDO
+    ! Strings
+    CHARACTER(LEN=255) :: thisLoc
+    CHARACTER(LEN=512) :: errMsg
+
+    !========================================================================
+    ! Init_MaxChemLev begins here!
+    !========================================================================
+
+    ! Initialize
+    RC      = GC_SUCCESS
+    errMsg  = ''
+    thisLoc = ' -> at Init_MaxChemLev (in GeosUtil/pressure_mod.F90)'
+
+    SELECT CASE( State_Grid%NZ )
+
+       !---------------------------------------------------------------------
+       ! GMAO met fields
+       !
+       ! State_Met%MaxStratLev is the 1 hPa level
+       ! State_Met%MaxChemLev is set to State_Chm%MaxStratLev by default
+       ! (but this could be defined differently if desired)
+       !---------------------------------------------------------------------
+       CASE( 72, 47 )
+          DO L = State_Grid%NZ+1, 1, -1
+             IF ( Get_Ap(L) > 1.0 ) THEN
+                State_Met%MaxChemLev  = L
+                State_Met%MaxStratLev = L
+                EXIT
+             ENDIF
+          ENDDO
+
+       !---------------------------------------------------------------------
+       ! GCAP / ModelE 2.1
+       !
+       ! For now, use the previous definitions to ensure
+       ! zero-diff results w/r/t older GEOS-Chem versions.
+       !---------------------------------------------------------------------
+       CASE( 102 )
+          State_Met%MaxChemLev  = 91
+          State_Met%MaxStratLev = 91
+       CASE( 74 )
+          State_Met%MaxChemLev  = 72
+          State_Met%MaxStratLev = 72
+       CASE( 40 )
+          State_Met%MaxChemLev  = 40
+          State_Met%MaxStratLev = 40
+
+       !---------------------------------------------------------------------
+       ! Otherwise stop with error
+       !---------------------------------------------------------------------
+       CASE DEFAULT
+          ErrMsg =                                                           &
+             'State_Grid%GridRes = ' // Trim( State_Grid%GridRes )        // &
+             ' does not have MaxTropLev and MaxStratLev defined.  Please' // &
+             ' add these definitions to the CASE statement in routine'    // &
+             ' "Init_MaxChemLev" (located in GeosUtil/pressure_mod.F90).' 
+       CALL GC_Error( ErrMsg, RC, ThisLoc )
+       RETURN
+    END SELECT
 
   END SUBROUTINE Init_MaxChemLev
 !EOC

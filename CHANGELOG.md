@@ -24,7 +24,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Added error trap to routine `Get_GC_Restart` to halt simulations that use `read_restart_as_real8: true` with a reduced vertical grid
 - Added `State_Met%MaxChemLev` and `State_Met%MaxStratLev` integer fields
 - Added `Init_MaxChemLev` routine in `GeosUtil/pressure_mod.F90`, called from routine `Init_Pressure`
-- Added `State_Met` argument to routines `Init_CloudJ`, `Init_Photolysis`, `Set_Clim_Profiles`, `GC_Init_Extra`, `Init_Pressure`, `Init_Mercury`, `Init_Sulfate`
+- Added `State_Met` argument to routines `Init_Photolysis`, `Set_Clim_Profiles`, `GC_Init_Extra`, `Init_Pressure`, `Init_Mercury`, `Init_Sulfate`
 
 ### Changed
 - Update termite CH4 emissions to the CAMS-GLOB-TERM_v1.1 product
