@@ -156,7 +156,7 @@ CONTAINS
           RETURN
        ENDIF
        CALL Init_CloudJ( Input_Opt, State_Grid, State_Diag,                  &
-                         State_Chm, State_Met,  RC                          )
+                         State_Chm, RC                                      )
        IF ( RC /= GC_SUCCESS ) THEN
           ErrMsg = 'Error encountered in "Init_CloudJ"!'
           CALL GC_Error( ErrMsg, RC, ThisLoc )

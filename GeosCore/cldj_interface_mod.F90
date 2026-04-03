@@ -55,7 +55,7 @@ CONTAINS
 ! !INTERFACE:
 !
   SUBROUTINE INIT_CLOUDJ( Input_Opt, State_Grid, State_Diag,                 &
-                          State_Chm, State_Met,  RC                         )
+                          State_Chm, RC                                     )
 !
 ! !USES:
 !
@@ -76,7 +76,6 @@ CONTAINS
     TYPE(OptInput), INTENT(IN)     :: Input_Opt   ! Input Options object
     TYPE(GrdState), INTENT(IN)     :: State_Grid  ! Grid State object
     TYPE(DgnState), INTENT(IN)     :: State_Diag  ! Diagnostics State object
-    TYPE(MetState), INTENT(IN)     :: State_Met   ! Meteorology State object
 !
 ! !INPUT/OUTPUT PARAMETERS:
 !
