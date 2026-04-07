@@ -69,7 +69,6 @@ CONTAINS
     USE State_Chm_Mod,  ONLY : ChmState
     USE State_Grid_Mod, ONLY : GrdState
     USE State_Diag_Mod, ONLY : DgnState
-    USE State_Met_Mod,  ONLY : MetState
 !
 ! !INPUT PARAMETERS:
 !
