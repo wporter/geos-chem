@@ -62,9 +62,6 @@ MODULE State_Grid_Mod
      INTEGER            :: GlobalNX         ! NX on the global grid
      INTEGER            :: GlobalNY         ! NY on the global grid
      INTEGER            :: NativeNZ         ! NZ on the native-resolution grid
-     INTEGER            :: MaxChemLev       ! Max # levels in chemistry grid
-     INTEGER            :: MaxStratLev      ! Max # levels below strat
-     INTEGER            :: MaxTropLev       ! Max # levels below trop
      INTEGER            :: XMinOffset       ! Min X offset from global grid
      INTEGER            :: XMaxOffset       ! Max X offset from global grid
      INTEGER            :: YMinOffset       ! Min Y offset from global grid
@@ -237,9 +234,6 @@ CONTAINS
     State_Grid%GlobalNX              =  0
     State_Grid%GlobalNY              =  0
     State_Grid%NativeNZ              =  0
-    State_Grid%MaxChemLev            =  0
-    State_Grid%MaxStratLev           =  0
-    State_Grid%MaxTropLev            =  0
     State_Grid%XMinOffset            =  0
     State_Grid%XMaxOffset            =  0
     State_Grid%YMinOffset            =  0
@@ -249,6 +243,55 @@ CONTAINS
     State_Grid%CPU_Subdomain_ID      =  -1
     State_Grid%CPU_Subdomain_FirstID =  -1
 #endif
+    State_Grid%GridRes               = ''
+    State_Grid%DX                    = 0e+0_fp
+    State_Grid%DY                    = 0e+0_fp
+    State_Grid%XMin                  = 0e+0_fp
+    State_Grid%XMax                  = 0e+0_fp
+    State_Grid%YMin                  = 0e+0_fp
+    State_Grid%YMax                  = 0e+0_fp
+    State_Grid%NX                    = 0
+    State_Grid%NY                    = 0
+    State_Grid%NZ                    = 0
+    State_Grid%HalfPolar             = .FALSE.
+    State_Grid%Center180             = .FALSE.
+    State_Grid%NestedGrid            = .FALSE.
+    State_Grid%NorthBuffer           = 0
+    State_Grid%SouthBuffer           = 0
+    State_Grid%EastBuffer            = 0
+    State_Grid%WestBuffer            = 0
+
+    !----------------------------------------
+    ! Grid fields computed in gc_grid_mod.F90
+    !----------------------------------------
+    State_Grid%GlobalNX     = 0
+    State_Grid%GlobalNY     = 0
+    State_Grid%NativeNZ     = 0
+    State_Grid%XMinOffset   = 0
+    State_Grid%XMaxOffset   = 0
+    State_Grid%YMinOffset   = 0
+    State_Grid%YMaxOffset   = 0
+
+    !---------------------------------------------------------------
+    ! Nullify all fields for safety's sake before allocating them
+    !---------------------------------------------------------------
+    State_Grid%GlobalXMid   => NULL()
+    State_Grid%GlobalYMid   => NULL()
+    State_Grid%GlobalXEdge  => NULL()
+    State_Grid%GlobalYEdge  => NULL()
+    State_Grid%XMid         => NULL()
+    State_Grid%XEdge        => NULL()
+    State_Grid%YMid         => NULL()
+    State_Grid%YEdge        => NULL()
+    State_Grid%YMid_R       => NULL()
+    State_Grid%YEdge_R      => NULL()
+    State_Grid%YSIN         => NULL()
+    State_Grid%Area_M2      => NULL()
+#ifdef LUO_WETDEP
+    State_Grid%DXSN_M         => NULL()
+    State_Grid%DYWE_M         => NULL()
+#endif
+
 #if defined( MODEL_GEOS )
     State_Grid%PredictorIsActive     =  .FALSE.
 #endif

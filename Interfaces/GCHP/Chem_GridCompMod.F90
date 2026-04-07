@@ -1525,12 +1525,6 @@ CONTAINS
     State_Grid%XMaxOffset  = State_Grid%NX ! X offset from global grid
     State_Grid%YMinOffset  = 1             ! Y offset from global grid
     State_Grid%YMaxOffset  = State_Grid%NY ! Y offset from global grid
-    State_Grid%MaxTropLev  = 40            ! # trop. levels
-#if defined( MODEL_GEOS )
-    State_Grid%MaxStratLev = value_LLSTRAT ! # strat. levels
-#else
-    State_Grid%MaxStratLev = 59            ! # strat. levels
-#endif
 
     ! Call the GCHP initialize routine
     CALL GCHP_Chunk_Init( nymdB     = nymdB,      & ! YYYYMMDD @ start of run
@@ -2730,7 +2724,7 @@ CONTAINS
                 DO L = 1, State_Grid%NZ
                 DO J = 1, State_Grid%NY
                 DO I = 1, State_Grid%NX
-                   IF ( L > State_Grid%MaxChemLev .AND. &
+                   IF ( L > State_Met%MaxChemLev .AND. &
                             ( .NOT. ThisSpc%Is_Advected ) ) THEN
                       ! For non-advected spc at L > MaxChemLev, use small number
                       State_Chm%Species(IND)%Conc(I,J,L) = 1.0E-30_FP
@@ -2800,8 +2794,8 @@ CONTAINS
 
           CALL MAPL_GetPointer( INTSTATE, Ptr3d_R8, 'KPPHvalue', notFoundOK=.TRUE., __RC__ )
           IF ( ASSOCIATED(Ptr3d_R8) .AND. ASSOCIATED(State_Chm%KPPHvalue) ) THEN
-             State_Chm%KPPHvalue(:,:,1:State_Grid%MaxChemLev) =       &
-            Ptr3d_R8(:,:,State_Grid%NZ:State_Grid%NZ-State_Grid%MaxChemLev+1:-1)
+             State_Chm%KPPHvalue(:,:,1:State_Met%MaxChemLev) =       &
+            Ptr3d_R8(:,:,State_Grid%NZ:State_Grid%NZ-State_Met%MaxChemLev+1:-1)
           ENDIF
           Ptr3d_R8 => NULL()
 
@@ -3192,9 +3186,9 @@ CONTAINS
        CALL MAPL_GetPointer( INTSTATE, Ptr3d_R8, 'KPPHvalue', &
                              notFoundOK=.TRUE., __RC__ )
        IF (ASSOCIATED(Ptr3d_R8) .AND. ASSOCIATED(State_Chm%KPPHvalue)) THEN
-          Ptr3d_R8(:,:,1:State_Grid%NZ-State_Grid%MaxChemLev) = 0.0
-          Ptr3d_R8(:,:,State_Grid%NZ:State_Grid%NZ-State_Grid%MaxChemLev+1:-1)=&
-             State_Chm%KPPHvalue(:,:,1:State_Grid%MaxChemLev)
+          Ptr3d_R8(:,:,1:State_Grid%NZ-State_Met%MaxChemLev) = 0.0
+          Ptr3d_R8(:,:,State_Grid%NZ:State_Grid%NZ-State_Met%MaxChemLev+1:-1)=&
+             State_Chm%KPPHvalue(:,:,1:State_Met%MaxChemLev)
        ENDIF
        Ptr3d_R8 => NULL()
 
