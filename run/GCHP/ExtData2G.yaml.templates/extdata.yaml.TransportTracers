@@ -5,22 +5,16 @@ Collections:
   # Meteorology collections
   #-------------------------------------------------------------------
   MERRA2.A3dyn.05x0625.nc4:
-    valid_range: "2009-01-01/2024-12-31T00:00"
     template: ./MetDir/%y4/%m2/MERRA2.%y4%m2%d2.A3dyn.05x0625.nc4
   MERRA2.I3.05x0625.nc4:
-    valid_range: "2009-01-01/2024-12-31T00:00"
     template: ./MetDir/%y4/%m2/MERRA2.%y4%m2%d2.I3.05x0625.nc4
   MERRA2.A1.05x0625.nc4:
-    valid_range: "2009-01-01/2024-12-31T00:00"
     template: ./MetDir/%y4/%m2/MERRA2.%y4%m2%d2.A1.05x0625.nc4
   MERRA2.A3cld.05x0625.nc4:
-    valid_range: "2009-01-01/2024-12-31T00:00"
     template: ./MetDir/%y4/%m2/MERRA2.%y4%m2%d2.A3cld.05x0625.nc4
   MERRA2.A3mstC.05x0625.nc4:
-    valid_range: "2009-01-01/2024-12-31T00:00"
     template: ./MetDir/%y4/%m2/MERRA2.%y4%m2%d2.A3mstC.05x0625.nc4
   MERRA2.A3mstE.05x0625.nc4:
-    valid_range: "2009-01-01/2024-12-31T00:00"
     template: ./MetDir/%y4/%m2/MERRA2.%y4%m2%d2.A3mstE.05x0625.nc4
   MERRA2.20150101.CN.05x0625.nc4:
     template: ./MetDir/2015/01/MERRA2.20150101.CN.05x0625.nc4
@@ -31,44 +25,32 @@ Collections:
   Olson_2001_Land_Map.025x025.generic.nc:
     template: ./ChemDir/Olson_Land_Map_201203/Olson_2001_Land_Map.025x025.generic.nc
   Condensed_Yuan_proc_MODIS_XLAI.025x025.%y4.nc:
-    valid_range: "2000-01-01/2020-12-31T00:00"
     template: ./HcoDir/Yuan_XLAI/v2021-06/Condensed_Yuan_proc_MODIS_XLAI.025x025.%y4.nc
 
   #-------------------------------------------------------------------
   # SF6, CO, and Rn222 emissions collections
   #-------------------------------------------------------------------
   EDGAR_v42_SF6_IPCC_2.generic.01x01.nc:
-    valid_range: "1970-01-01/2008-01-01T00:00"
     template: ./HcoDir/SF6/v2019-01/EDGAR_v42_SF6_IPCC_2.generic.01x01.nc
   EDGAR_v43.CO.ENG.0.1x0.1.nc:
-    valid_range: "1970-01-01/2010-01-01T00:00"
     template: ./HcoDir/EDGARv43/v2016-11/EDGAR_v43.CO.ENG.0.1x0.1.nc
   EDGAR_v43.CO.FFF.0.1x0.1.nc:
-    valid_range: "1970-01-01/2010-01-01T00:00"
     template: ./HcoDir/EDGARv43/v2016-11/EDGAR_v43.CO.FFF.0.1x0.1.nc
   EDGAR_v43.CO.IND.0.1x0.1.nc:
-    valid_range: "1970-01-01/2010-01-01T00:00"
     template: ./HcoDir/EDGARv43/v2016-11/EDGAR_v43.CO.IND.0.1x0.1.nc
   EDGAR_v43.CO.POW.0.1x0.1.nc:
-    valid_range: "1970-01-01/2010-01-01T00:00"
     template: ./HcoDir/EDGARv43/v2016-11/EDGAR_v43.CO.POW.0.1x0.1.nc
   EDGAR_v43.CO.PPA.0.1x0.1.nc:
-    valid_range: "1970-01-01/2010-01-01T00:00"
     template: ./HcoDir/EDGARv43/v2016-11/EDGAR_v43.CO.PPA.0.1x0.1.nc
   EDGAR_v43.CO.RCO.0.1x0.1.nc:
-    valid_range: "1970-01-01/2010-01-01T00:00"
     template: ./HcoDir/EDGARv43/v2016-11/EDGAR_v43.CO.RCO.0.1x0.1.nc
   EDGAR_v43.CO.SWD.0.1x0.1.nc:
-    valid_range: "1970-01-01/2010-01-01T00:00"
     template: ./HcoDir/EDGARv43/v2016-11/EDGAR_v43.CO.SWD.0.1x0.1.nc
   EDGAR_v43.CO.TNG.0.1x0.1.nc:
-    valid_range: "1970-01-01/2010-01-01T00:00"
     template: ./HcoDir/EDGARv43/v2016-11/EDGAR_v43.CO.TNG.0.1x0.1.nc
   EDGAR_v43.CO.TRO.0.1x0.1.nc:
-    valid_range: "1970-01-01/2010-01-01T00:00"
     template: ./HcoDir/EDGARv43/v2016-11/EDGAR_v43.CO.TRO.0.1x0.1.nc
   CEDS_CO_0.1x0.1_%y4.nc:
-    valid_range: "1980-01-01/2019-12-01T00:00"
     template: ./HcoDir/CEDS/v2024-06/%y4/CEDS_CO_0.1x0.1_%y4.nc
   Rn222_Emis_Zhang_Liu_et_al_05x05_mass.nc:
     template: ./HcoDir/ZHANG_Rn222/v2021-11/Rn222_Emis_Zhang_Liu_et_al_05x05_mass.nc
@@ -77,7 +59,6 @@ Collections:
   # Timezones collection
   #-------------------------------------------------------------------
   timezones_vohra_2017_0.1x0.1.nc:
-    valid_range: "2017-01-01/2017-12-31T00:00"
     template: ./HcoDir/TIMEZONES/v2024-02/timezones_vohra_2017_0.1x0.1.nc
 
   #-------------------------------------------------------------------
