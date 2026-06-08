@@ -148,6 +148,14 @@ CONTAINS
     k = MAX( k, 0.0_dp )
   END FUNCTION ARRPLUS_abde
 
+  FUNCTION TUN_abc( a0, b0, c0 ) RESULT( k )
+    !
+    REAL(dp), INTENT(IN) :: a0, b0, c0
+    REAL(dp)             :: k
+    !
+    k =  a0 * EXP( b0 / TEMP ) * EXP( c0 / TEMP**3)
+  END FUNCTION TUN_abc
+
   FUNCTION TUNPLUS_abcde( a0, b0, c0, d0, e0 ) RESULT( k )
     ! Used to compute the rate for these reactions:
     !    IHOO1 = 1.5OH + ...
@@ -3160,7 +3168,7 @@ CONTAINS
        k     = k + Ars_L1K( area, H%aClRadi, gamma, SR_MW(ind_O3) )
     ENDIF
 
-    ! Assume OH is limiting, so update the removal rate accordingly
+    ! Assume O3 is limiting, so update the removal rate accordingly
     k = kIIR1Ltd( C(ind_O3), C(ind_BrSALA), k )
   END FUNCTION O3uptkByBrSALA
 
@@ -3187,7 +3195,7 @@ CONTAINS
        k     = k + Ars_L1K( area, H%xRadi(SSC), gamma, SR_MW(ind_O3) )
     ENDIF
 
-    ! Assume OH is limiting, so update the removal rate accordingly
+    ! Assume O3 is limiting, so update the removal rate accordingly
     k = kIIR1Ltd( C(ind_O3), C(ind_BrSALC), k )
   END FUNCTION O3uptkByBrSALC
 
@@ -3455,6 +3463,517 @@ CONTAINS
        k = k + Ars_L1k( H%xArea(IIC), H%xRadi(IIC), gamma, srMw )
     ENDIF
   END FUNCTION VOCuptk1stOrd
+
+  !=========================================================================
+  ! Hetchem rate-law functions for DMS species
+  !=========================================================================
+
+  FUNCTION O3uptkByDMS( H ) RESULT( k )
+    !
+    ! DMS + O3
+    !
+    TYPE(HetState), INTENT(IN) :: H              ! Hetchem State
+    REAL(dp)                   :: k              ! rxn prob[1], rxn rate [1/s]
+    REAL(dp)                   :: srMw           ! Root MW
+    !
+    k    = 0.0_dp
+    srMw = SR_MW(ind_DMS)                        ! Root MW of DMS
+
+    ! Sulfate, sea salt, clouds for T > 258 K
+    IF ( TEMP > 258_dp ) THEN
+       k = k + Ars_L1K( H%ClearFr * H%xArea(SUL), H%xRadi(SUL), 		     &
+       Gamma_O3_DMS( H, H%xRadi(SUL) ), srMw )
+
+       k = k + Ars_L1K( H%ClearFr * H%xArea(SSA), H%xRadi(SSA), 		     &
+       Gamma_O3_DMS( H, H%xRadi(SSA) ), srMw )
+
+       k = k + Ars_L1K( H%ClearFr * H%xArea(SSC), H%xRadi(SSC), 		     &
+       Gamma_O3_DMS( H, H%xRadi(SSC) ), srMw )
+
+       ! TODO: Separate liquid/ice clouds? Branching ratios?
+       k = k + CloudHet( H, srMw, Gamma_O3_DMS( H, H%rLiq ),           &
+          Gamma_O3_DMS( H, H%rIce ), 1.0_dp, 1.0_dp )
+    ENDIF
+
+    ! Assume O3 is limiting, so update the removal rate accordingly
+    k = kIIR1Ltd( C(ind_O3), C(ind_DMS), k )
+
+    ! Force to zero if HetRate flag is turned on
+    IF ( H%TurnOffHetRates ) k = 0.0_dp
+  END FUNCTION O3uptkByDMS
+
+
+  FUNCTION OHuptkByDMSO( H ) RESULT( k )
+    !
+    ! DMSO + OH
+    !
+    TYPE(HetState), INTENT(IN) :: H              ! Hetchem State
+    REAL(dp)                   :: k              ! rxn prob[1], rxn rate [1/s]
+    REAL(dp)                   :: srMw           ! Root MW
+    !
+    k    = 0.0_dp
+    srMw = SR_MW(ind_DMSO)                       ! Root MW of DMSO
+
+    ! Sulfate, sea salt, clouds for T > 258 K
+    IF ( TEMP > 258_dp ) THEN
+       k = k + Ars_L1K( H%ClearFr * H%xArea(SUL), H%xRadi(SUL), 		     &
+       Gamma_OH_DMSO( H, H%xRadi(SUL) ), srMw )
+
+       k = k + Ars_L1K( H%ClearFr * H%xArea(SSA), H%xRadi(SSA), 		     &
+       Gamma_OH_DMSO( H, H%xRadi(SSA) ), srMw )
+
+       k = k + Ars_L1K( H%ClearFr * H%xArea(SSC), H%xRadi(SSC), 		     &
+       Gamma_OH_DMSO( H, H%xRadi(SSC) ), srMw )
+
+       k = k + CloudHet( H, srMw, Gamma_OH_DMSO( H, H%rLiq ),           &
+          Gamma_OH_DMSO( H, H%rIce ), 1.0_dp, 1.0_dp )
+    ENDIF
+
+    ! Assume OH is limiting, so update the removal rate accordingly
+    k = kIIR1Ltd( C(ind_OH), C(ind_DMSO), k )
+
+    ! Force to zero if HetRate flag is turned on
+    IF ( H%TurnOffHetRates ) k = 0.0_dp
+  END FUNCTION OHuptkByDMSO
+
+  FUNCTION OHuptkByMSIA( H ) RESULT( k )
+    !
+    ! MSIA + OH
+    !
+    TYPE(HetState), INTENT(IN) :: H              ! Hetchem State
+    REAL(dp)                   :: k              ! rxn prob[1], rxn rate [1/s]
+    REAL(dp)                   :: srMw           ! Root MW
+    !
+    k    = 0.0_dp
+    srMw = SR_MW(ind_MSIA)                       ! Root MW of MSIA
+
+    ! Sulfate, sea salt, clouds for T > 258 K
+    IF ( TEMP > 258_dp ) THEN
+       k = k + Ars_L1K( H%ClearFr * H%xArea(SUL), H%xRadi(SUL), 		     &
+          Gamma_OH_MSIA( H, H%H_conc_Sul, H%xRadi(SUL) ), srMw )
+
+       k = k + Ars_L1K( H%ClearFr * H%xArea(SSA), H%xRadi(SSA), 		     &
+          Gamma_OH_MSIA( H, H%H_conc_SSA, H%xRadi(SSA) ), srMw )
+
+   	   k = k + Ars_L1K( H%ClearFr * H%xArea(SSC), H%xRadi(SSC), 		     &
+          Gamma_OH_MSIA( H, H%H_conc_SSC, H%xRadi(SSC) ), srMw )
+
+       k = k + CloudHet( H, srMw, Gamma_OH_MSIA( H, H%pHCloud, H%rLiq ),           &
+          Gamma_OH_MSIA( H, 4.5_dp, H%rIce ), 1.0_dp, 1.0_dp )
+    ENDIF
+
+    ! Assume OH is limiting, so update the removal rate accordingly
+    k = kIIR1Ltd( C(ind_OH), C(ind_MSIA), k )
+
+    ! Force to zero if HetRate flag is turned on
+    IF ( H%TurnOffHetRates ) k = 0.0_dp
+  END FUNCTION OHuptkByMSIA
+
+  FUNCTION O3uptkByMSIA( H ) RESULT( k )
+    !
+    ! MSIA + O3
+    !
+    TYPE(HetState), INTENT(IN) :: H              ! Hetchem State
+    REAL(dp)                   :: k              ! rxn prob[1], rxn rate [1/s]
+    REAL(dp)                   :: srMw           ! Root MW
+    !
+    k    = 0.0_dp
+    srMw = SR_MW(ind_MSIA)                       ! Root MW of MSIA
+
+    ! Sulfate, sea salt, clouds for T > 258 K
+    IF ( TEMP > 258_dp ) THEN
+       k = k + Ars_L1K( H%ClearFr * H%xArea(SUL), H%xRadi(SUL), 		     &
+          Gamma_O3_MSIA( H, H%H_conc_Sul, H%xRadi(SUL) ), srMw )
+
+	   k = k + Ars_L1K( H%ClearFr * H%xArea(SSA), H%xRadi(SSA), 		     &
+          Gamma_O3_MSIA( H, H%H_conc_SSA, H%xRadi(SSA) ), srMw )
+
+       k = k + Ars_L1K( H%ClearFr * H%xArea(SSC), H%xRadi(SSC), 		     &
+          Gamma_O3_MSIA( H, H%H_conc_SSC, H%xRadi(SSC) ), srMw )
+
+       k = k + CloudHet( H, srMw, Gamma_O3_MSIA( H, H%pHCloud, H%rLiq ),       &
+          Gamma_O3_MSIA( H, 4.5_dp, H%rIce ), 1.0_dp, 1.0_dp )
+    ENDIF
+
+    ! Assume O3 is limiting, so update the removal rate accordingly
+    k = kIIR1Ltd( C(ind_O3), C(ind_MSIA), k )
+
+    ! Force to zero if HetRate flag is turned on
+    IF ( H%TurnOffHetRates ) k = 0.0_dp
+  END FUNCTION O3uptkByMSIA
+
+
+  FUNCTION OHuptkByMSA( H ) RESULT( k )
+    !
+    ! MSA + OH
+    !
+    TYPE(HetState), INTENT(IN) :: H              ! Hetchem State
+    REAL(dp)                   :: k              ! rxn prob[1], rxn rate [1/s]
+    REAL(dp)                   :: srMw           ! Root MW
+    !
+    k    = 0.0_dp
+    srMw = SR_MW(ind_MSA)                       ! Root MW of MSA
+
+    ! Sulfate, sea salt, clouds for T > 258 K
+    IF ( TEMP > 258_dp ) THEN
+       k = k + Ars_L1K( H%ClearFr * H%xArea(SUL), H%xRadi(SUL), 		     &
+          Gamma_OH_MSA( H, H%H_conc_Sul, H%xRadi(SUL) ), srMw )
+
+	   k = k + Ars_L1K( H%ClearFr * H%xArea(SSA), H%xRadi(SSA), 		     &
+          Gamma_OH_MSA( H, H%H_conc_SSA, H%xRadi(SSA) ), srMw )
+
+       k = k + Ars_L1K( H%ClearFr * H%xArea(SSC), H%xRadi(SSC), 		     &
+          Gamma_OH_MSA( H, H%H_conc_SSC, H%xRadi(SSC) ), srMw )
+
+       k = k + CloudHet( H, srMw, Gamma_OH_MSA( H, H%pHCloud, H%rLiq ),      &
+          Gamma_OH_MSA( H, 4.5_dp, H%rIce ), 1.0_dp, 1.0_dp )
+    ENDIF
+
+    ! Assume OH is limiting, so update the removal rate accordingly
+    k = kIIR1Ltd( C(ind_OH), C(ind_MSA), k )
+
+    ! Force to zero if HetRate flag is turned on
+    IF ( H%TurnOffHetRates ) k = 0.0_dp
+  END FUNCTION OHuptkByMSA
+
+  FUNCTION HPMTFuptkAero( H ) RESULT( k )
+    !
+    ! Computes the reaction rate [1/s] for 1st order uptake of HPMTF onto aerosols.
+    !
+    TYPE(HetState), INTENT(IN) :: H              ! HetChem State
+    REAL(dp)                   :: srMw, k        ! sqrt(mol wt), rxn rate [1/s]
+    REAL(dp)                   :: gamma          !
+    !
+    k    = 0.0_dp
+    srMw = SR_MW(ind_HPMTF)
+    gamma = 1e-3_dp
+    !
+    ! Uptake by various aerosol types
+    k = k + Ars_L1k( H%xArea(DU1), H%xRadi(DU1), gamma, srMw )
+    k = k + Ars_L1k( H%xArea(DU2), H%xRadi(DU2), gamma, srMw )
+    k = k + Ars_L1k( H%xArea(DU3), H%xRadi(DU3), gamma, srMw )
+    k = k + Ars_L1k( H%xArea(DU4), H%xRadi(DU4), gamma, srMw )
+    k = k + Ars_L1k( H%xArea(DU5), H%xRadi(DU5), gamma, srMw )
+    k = k + Ars_L1k( H%xArea(DU6), H%xRadi(DU6), gamma, srMw )
+    k = k + Ars_L1k( H%xArea(DU7), H%xRadi(DU7), gamma, srMw )
+    k = k + Ars_L1k( H%xArea(SUL), H%xRadi(SUL), gamma, srMw )
+    k = k + Ars_L1k( H%xArea(BKC), H%xRadi(BKC), gamma, srMw )
+    k = k + Ars_L1k( H%xArea(ORC), H%xRadi(ORC), gamma, srMw )
+    k = k + Ars_L1k( H%xArea(SSA), H%xRadi(SSA), gamma, srMw )
+    k = k + Ars_L1k( H%xArea(SSC), H%xRadi(SSC), gamma, srMw )
+  END FUNCTION HPMTFuptkAero
+
+  FUNCTION HPMTFuptkCld( H ) RESULT( k )
+    !
+    ! Computes the reaction rate [1/s] for 1st order uptake of HPMTF onto clouds.
+    !
+    TYPE(HetState), INTENT(IN) :: H              ! HetChem State
+    REAL(dp)                   :: srMw, k        ! sqrt(mol wt), rxn rate [1/s]
+    REAL(dp)                   :: gamLiq, gamIce
+    !
+    k    = 0.0_dp
+    srMw = SR_MW(ind_HPMTF)
+    gamLiq = 1E-3_dp
+    gamIce = 1e-3_dp
+
+    k = k + CloudHet( H, srMw, gamLiq, gamIce, 1.0_dp, 1.0_dp )
+    !
+  END FUNCTION HPMTFuptkCld
+
+
+  FUNCTION Gamma_O3_DMS( H, Radius ) RESULT( gamma )
+    !
+    ! Computes reactive uptake coefficient for DMS oxidation by O3.
+    !
+    TYPE(HetState), INTENT(IN) :: H             ! Hetchem State
+    REAL(dp),       INTENT(IN) :: Radius        ! Radius in cm
+    REAL(dp)                   :: gamma         ! rxn prob [1]
+    !
+    REAL(dp), PARAMETER  :: K0_O3 = 1.1e-2_dp * CON_ATM_BAR ! Henry K0(O3)
+    !
+    REAL(dp) :: ab,  gb, gd,  cavg,  H_O3, C_O3, H_DMS, M_DMS
+    REAL(dp) :: k_b,   D_l, l_r
+    !
+    gamma     = 0.0_dp
+
+    H_O3    = (HENRY_K0(ind_O3) * CON_ATM_BAR) 							 	&
+       * EXP( HENRY_CR(ind_O3) * ( INV_TEMP - INV_T298 ) )
+
+    ! TODO: More efficient way to handle O3 and OH
+    C_O3 = C(ind_O3) / NUMDEN * (PRESS / 1.01325e3_dp) * H_O3
+
+    ! Molwt of DMS (kg/mol)
+    M_DMS      = MW(ind_DMS) * 1.0e-3_dp
+    cavg      = SQRT( EIGHT_RSTARG_T / ( H%Pi * M_DMS ) ) * 100.0_dp
+
+    ! Henry's law
+    H_DMS    = (HENRY_K0(ind_DMS) * CON_ATM_BAR) 							 &
+           * EXP( HENRY_CR(ind_DMS) * ( INV_TEMP - INV_T298 ) )
+
+    k_b      = 5.3e12_dp * EXP(-2600_dp / TEMP)         !M-1 s-1  (Zhu et al. 2006)
+
+    D_l      = 2.2e-2_dp * EXP( -2178_dp / TEMP)        !cm2 s-1. (Saltzman et al., 1993)
+    l_r      = SQRT( D_l / (k_b * C_O3) )            ! cm
+
+    ! Mass accommodation coefficient
+    ab       = 1.0e-3_dp
+
+    ! Chemical reaction coefficient
+    gb     = FOUR_R_T * H_DMS * l_r * k_b * C_O3 / cavg
+    gb     = gb * ReactoDiff_Corr( Radius, l_r )
+
+    ! gd calculated using old GAMMA_DIF
+    ! Should now be handled elsewhere?
+    ! TODO: Confirm best way to include gd in gamma calculation
+	!gd     = 3.0_dp * SQRT( 1.0_dp + M_DMS/2.897e-2_dp ) / 					&
+	!		(8.0_dp * (NUMDEN * 1e6_dp) * 4.0e-10_dp**2_fp * (Radius * 1e-2_dp))
+
+
+!    gamma      = 1.0_dp / (1.0_dp/gd + 1.0_dp/ab + 1.0_dp/gb)
+    gamma      = 1.0_dp / (1.0_dp/ab + 1.0_dp/gb)
+
+  END FUNCTION Gamma_O3_DMS
+
+
+  FUNCTION Gamma_OH_DMSO( H, Radius ) RESULT( gamma )
+    !
+    ! Computes reactive uptake coefficient for DMSO oxidation by OH.
+    !
+    TYPE(HetState), INTENT(IN) :: H             ! Hetchem State
+    REAL(dp),       INTENT(IN) :: Radius        ! Radius in cm
+    REAL(dp)                   :: gamma         ! rxn prob [1]
+    !
+    REAL(dp) :: ab,  gb, gd,  cavg, C_OH, H_DMSO, M_DMSO
+    REAL(dp) :: k_b,   D_l, l_r
+    !
+    gamma     = 0.0_dp
+
+    C_OH = C(ind_OH) * 1.0e-19_dp
+
+    ! Molwt of DMSO (kg/mol)
+    M_DMSO    = MW(ind_DMSO) * 1.0e-3_dp
+    cavg      = SQRT( EIGHT_RSTARG_T / ( H%Pi * M_DMSO ) ) * 100.0_dp
+
+    ! Henry's law
+    H_DMSO    = (HENRY_K0(ind_DMSO) * CON_ATM_BAR) 							 &
+                * EXP( HENRY_CR(ind_DMSO) * ( INV_TEMP - INV_T298 ) )
+
+    k_b      = 4.7e11_dp * EXP(-1270_dp / TEMP)         !M-1 s-1  (Zhu et al. 2006)
+
+    D_l      = 1.0e-5_dp                                !cm2 s-1. (Saltzman et al., 1993)
+    l_r      = SQRT( D_l / (k_b * C_OH) )               ! cm
+
+    ! Mass accommodation coefficient
+    ab       = 0.1_dp
+
+    ! Chemical reaction coefficient
+    gb     = FOUR_R_T * H_DMSO * l_r * k_b * C_OH / cavg
+    gb     = gb * ReactoDiff_Corr( Radius, l_r )
+
+    gamma      = 1.0_dp / (1.0_dp/ab + 1.0_dp/gb)
+
+  END FUNCTION Gamma_OH_DMSO
+
+
+  FUNCTION Gamma_OH_MSIA( H, pH, Radius ) RESULT( gamma )
+    !
+    ! Computes reactive uptake coefficient for DMSO oxidation by OH.
+    ! TODO: Improve efficiency (check original EHC_CALC_GAMMA4)
+    !
+    TYPE(HetState), INTENT(IN) :: H             ! Hetchem State
+    REAL(dp),       INTENT(IN) :: Radius        ! Radius in cm
+    REAL(dp)                   :: gamma         ! rxn prob [1]
+
+    !
+    REAL(dp) :: ab, gb, gd, cavg
+    REAL(dp) :: C_OH, C_O3, H_O3, H_MSIA, M_MSIA
+    REAL(dp) :: Ka, pH, C_Hp
+    REAL(dp) :: k_1_OH, k_2_OH, k_1_O3, k_2_O3
+    REAL(dp) :: k_b_OH, k_b_O3,  D_l, l_r_O3, l_r_OH
+    REAL(dp) :: gb_OH,     gb_O3,     gb_tot  
+    !
+    gamma     = 0.0_dp
+
+    C_Hp = 10.0e+0_dp**(-pH)
+
+    C_OH = C(ind_OH) * 1.0e-19_dp
+
+    H_O3    = (HENRY_K0(ind_O3) * CON_ATM_BAR) 							 	&
+              * EXP( HENRY_CR(ind_O3) * ( INV_TEMP - INV_T298 ) )
+    C_O3 = C(ind_O3) / NUMDEN * (PRESS / 1.01325e3_dp) * H_O3
+
+    ! Molwt of MSIA (kg/mol)
+    M_MSIA    = MW(ind_MSIA) * 1.0e-3_dp
+    cavg      = SQRT( EIGHT_RSTARG_T / ( H%Pi * M_MSIA ) ) * 100.0_dp
+
+    ! Henry's law
+    H_MSIA    = (HENRY_K0(ind_MSIA) * CON_ATM_BAR) 							 &
+                * EXP( HENRY_CR(ind_MSIA) * ( INV_TEMP - INV_T298 ) )
+
+	Ka        = 10.0e+0_dp**(-2.28_dp)
+
+    k_1_OH    = 6.0e+9_dp
+    k_2_OH    = 1.2e+10_dp
+    k_1_O3    = 3.5e+7_dp
+    k_2_O3    = 2.0e+6_dp
+
+    k_b_OH   = k_1_OH / (1.0e+0 + Ka / C_Hp) +                             &
+               k_2_OH * (Ka/C_Hp) / (1.0e+0_dp + Ka/C_Hp) !M-1 s-1  (Zhu et al. 2006)
+
+    k_b_O3   = k_1_O3 / (1.0e+0 + Ka / C_Hp) +                             &
+               k_2_O3 * (Ka/C_Hp) / (1.0e+0_dp + Ka/C_Hp) !M-1 s-1  (Zhu et al. 2006)
+
+    D_l      = 1.0e-5_dp                                  !cm2 s-1. (Saltzman et al., 1993)
+    l_r_OH   = SQRT( D_l / (k_b_OH * C_OH) )              ! cm
+    l_r_O3   = SQRT( D_l / (k_b_O3 * C_O3) )              ! cm
+
+
+    ! Mass accommodation coefficient
+    ab       = 0.1_dp
+
+    ! Chemical reaction coefficient
+    gb_OH    = FOUR_R_T * H_MSIA * l_r_OH * k_b_OH * C_OH / cavg
+    gb_OH    = gb_OH * ReactoDiff_Corr( Radius, l_r_OH )
+
+    gb_O3    = FOUR_R_T * H_MSIA * l_r_O3 * k_b_O3 * C_O3 / cavg
+    gb_O3    = gb_O3 * ReactoDiff_Corr( Radius, l_r_O3 )
+
+    gb_tot   = gb_OH + gb_O3
+
+    gamma      = 1.0_dp / (1.0_dp/ab + 1.0_dp/gb_tot)
+
+    ! Calculate gamma for OH alone
+    gamma = gamma * gb_OH / gb_tot
+
+  END FUNCTION Gamma_OH_MSIA
+
+  FUNCTION Gamma_O3_MSIA( H, pH, Radius ) RESULT( gamma )
+    !
+    ! Computes reactive uptake coefficient for DMSO oxidation by O3.
+    ! TODO: Improve efficiency (check original EHC_CALC_GAMMA4)
+    !
+    TYPE(HetState), INTENT(IN) :: H             ! Hetchem State
+    REAL(dp),       INTENT(IN) :: Radius        ! Radius in cm
+    REAL(dp)                   :: gamma         ! rxn prob [1]
+
+    !
+    REAL(dp) :: ab, gd, cavg
+    REAL(dp) :: C_OH, C_O3, H_O3, H_MSIA, M_MSIA
+    REAL(dp) :: Ka, pH, C_Hp
+    REAL(dp) :: k_1_OH, k_2_OH, k_1_O3, k_2_O3
+    REAL(dp) :: k_b_OH, k_b_O3,  D_l, l_r_O3, l_r_OH
+    REAL(dp) :: gb_OH,  gb_O3,  gb_tot  
+    !
+    gamma     = 0.0_dp
+
+    C_Hp = 10.0e+0_dp**(-pH)
+
+    C_OH = C(ind_OH) * 1.0e-19_dp
+
+    H_O3    = (HENRY_K0(ind_O3) * CON_ATM_BAR) 							 	&
+       * EXP( HENRY_CR(ind_O3) * ( INV_TEMP - INV_T298 ) )
+    C_O3 = C(ind_O3) / NUMDEN * (PRESS / 1.01325e3_dp) * H_O3
+
+    ! Molwt of MSIA (kg/mol)
+    M_MSIA    = MW(ind_MSIA) * 1.0e-3_dp
+    cavg      = SQRT( EIGHT_RSTARG_T / ( H%Pi * M_MSIA ) ) * 100.0_dp
+
+    ! Henry's law
+    H_MSIA    = (HENRY_K0(ind_MSIA) * CON_ATM_BAR) 							 &
+           * EXP( HENRY_CR(ind_MSIA) * ( INV_TEMP - INV_T298 ) )
+
+	Ka        = 10.0e+0_dp**(-2.28_dp)
+
+    k_1_OH    = 6.0e+9_dp
+    k_2_OH    = 1.2e+10_dp
+    k_1_O3    = 3.5e+7_dp
+    k_2_O3    = 2.0e+6_dp
+
+    k_b_OH   = k_1_OH / (1.0e+0 + Ka / C_Hp) +                             &
+               k_2_OH * (Ka/C_Hp) / (1.0e+0_dp + Ka/C_Hp) !M-1 s-1  (Zhu et al. 2006)
+
+    k_b_O3   = k_1_O3 / (1.0e+0 + Ka / C_Hp) +                             &
+               k_2_O3 * (Ka/C_Hp) / (1.0e+0_dp + Ka/C_Hp) !M-1 s-1  (Zhu et al. 2006)
+
+    D_l      = 1.0e-5_dp                                  !cm2 s-1. (Saltzman et al., 1993)
+    l_r_OH   = SQRT( D_l / (k_b_OH * C_OH) )              ! cm
+    l_r_O3   = SQRT( D_l / (k_b_O3 * C_O3) )              ! cm
+
+
+    ! Mass accommodation coefficient
+    ab       = 0.1_dp
+
+    ! Chemical reaction coefficient
+    gb_OH    = FOUR_R_T * H_MSIA * l_r_OH * k_b_OH * C_OH / cavg
+    gb_OH    = gb_OH * ReactoDiff_Corr( Radius, l_r_OH )
+
+    gb_O3    = FOUR_R_T * H_MSIA * l_r_O3 * k_b_O3 * C_O3 / cavg
+    gb_O3    = gb_O3 * ReactoDiff_Corr( Radius, l_r_O3 )
+
+    gb_tot   = gb_OH + gb_O3
+
+    gamma      = 1.0_dp / (1.0_dp/ab + 1.0_dp/gb_tot)
+
+    ! Calculate gamma for OH alone
+    gamma = gamma * gb_O3 / gb_tot
+
+  END FUNCTION Gamma_O3_MSIA
+
+
+  FUNCTION Gamma_OH_MSA( H, pH, Radius ) RESULT( gamma )
+    !
+    ! Computes reactive uptake coefficient for DMSO oxidation by OH.
+    ! TODO: Improve efficiency (check original EHC_CALC_GAMMA4)
+    !
+    TYPE(HetState), INTENT(IN) :: H             ! Hetchem State
+    REAL(dp),       INTENT(IN) :: Radius        ! Radius in cm
+    REAL(dp)                   :: gamma         ! rxn prob [1]
+
+    !
+    REAL(dp) :: ab, gb, gd, cavg
+    REAL(dp) :: C_OH, H_MSA, M_MSA
+    REAL(dp) :: Ka, pH, C_Hp
+    REAL(dp) :: k_1, k_2
+    REAL(dp) :: k_b, D_l, l_r
+    !
+    gamma     = 0.0_dp
+
+    C_Hp = 10.0e+0_dp**(-pH)
+
+    C_OH = C(ind_OH) * 1.0e-19_dp
+
+    ! Molwt of MSA (kg/mol)
+    M_MSA     = MW(ind_MSA) * 1.0e-3_dp
+    cavg      = SQRT( EIGHT_RSTARG_T / ( H%Pi * M_MSA ) ) * 100.0_dp
+
+    ! Henry's law
+    H_MSA    = (HENRY_K0(ind_MSA) * CON_ATM_BAR) 							 &
+          * EXP( HENRY_CR(ind_MSA) * ( INV_TEMP - INV_T298 ) )
+
+	Ka        = 10.0e+0_dp**(1.86_dp)
+
+    k_1       = 1.5e+7_dp                             ! M-1 s-1
+    k_2       = 8.8e+10_dp * EXP(-2.63e+3_dp / TEMP)  ! M-1 s-1
+
+    k_b       = k_1 / (1.0e+0 + Ka / C_Hp) +                             &
+                k_2 * (Ka/C_Hp) / (1.0e+0_dp + Ka/C_Hp) !M-1 s-1  (Zhu et al. 2006)
+
+
+    D_l       = 1.2e-5_dp                                  !cm2 s-1. (Saltzman et al., 1993)
+    l_r       = SQRT( D_l / (k_b * C_OH) )              ! cm
+
+
+    ! Mass accommodation coefficient
+    ab        = 0.1_dp
+
+    ! Chemical reaction coefficient
+    gb        = FOUR_R_T * H_MSA * l_r * k_b * C_OH / cavg
+    gb        = gb * ReactoDiff_Corr( Radius, l_r )
+
+    gamma     = 1.0_dp / (1.0_dp/ab + 1.0_dp/gb)
+
+  END FUNCTION Gamma_OH_MSA
+
 
 END MODULE fullchem_RateLawFuncs
 !EOC

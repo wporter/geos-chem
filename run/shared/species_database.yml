@@ -3271,6 +3271,8 @@ MSA:
   DD_Hstar: 0.0
   Formula: CH4SO3
   FullName: Methyl sulfonic acid
+  Henry_CR: 1760.0
+  Henry_K0: 1.0e+9
   Is_Aerosol: true
   Is_DryDep: true
   Is_WetDep: true
@@ -5021,3 +5023,484 @@ XYLE:
   FullName: Xylene
   Is_Gas: true
   MW_g: 106.18
+DMSO:
+  DD_DvzAerSnow: 0.03
+  DD_DvzMinVal: [0.01, 0.01]
+  DD_F0: 0.0
+  DD_Hstar: 0.0
+  Formula: (CH3)2SO
+  FullName: Dimethyl sulfoxide
+  Henry_CR: 2580.0
+  Henry_K0: 1.0e+7
+  Is_Aerosol: true
+  Is_DryDep: true
+  Is_WetDep: true
+  MW_g: 78.13
+  WD_AerScavEff: 1.0
+  WD_KcScaleFac: [1.0, 0.5, 1.0]
+  WD_RainoutEff: [1.0, 0.0, 1.0]
+  WD_RainoutEff_Luo: [0.4, 0.0, 1.0]
+MSIA:
+  DD_DvzAerSnow: 0.03
+  DD_DvzMinVal: [0.01, 0.01]
+  DD_F0: 0.0
+  DD_Hstar: 0.0
+  Formula: CH3SO2H
+  FullName: Methane sulphinic acid
+  Henry_CR: 1760.0
+  Henry_K0: 1.0e+8
+  Is_Aerosol: true
+  Is_DryDep: true
+  Is_WetDep: true
+  MW_g: 80.10
+  WD_AerScavEff: 1.0
+  WD_KcScaleFac: [1.0, 0.5, 1.0]
+  WD_RainoutEff: [1.0, 0.0, 1.0]
+  WD_RainoutEff_Luo: [0.4, 0.0, 1.0]
+HPMTF:
+  DD_F0: 1.0
+  DD_Hstar: 3.0e+3
+  Formula: HOOCH2SCHO
+  FullName: hydrperoxymethyl thioformate
+  Henry_CR: 5200.0
+  Henry_K0: 3.0e+3
+  Is_DryDep: true
+  Is_Gas: true
+  Is_WetDep: true
+  MW_g: 108.805
+  WD_RetFactor: 2.0e-2
+MSP:
+  Formula: CH3SCH2OO
+  FullName: methylthiomethylperoxy radical
+  Is_Gas: true
+  MW_g: 93.13
+MSPO2:
+  Formula: OOCH2SCH2OOH
+  FullName: organosulfur radical
+  Is_Gas: true
+  MW_g: 125.11
+C2H5O3S:
+  Formula: HOOCH2SCH2O
+  FullName: organosulfur radical
+  Is_Gas: true
+  MW_g: 109.12
+MO2S:
+  Formula: HOOCH2S
+  FullName: organosulfur radical
+  Is_Gas: true
+  MW_g: 79.10
+MO3S:
+  Formula: HOOCH2SO
+  FullName: organosulfur radical
+  Is_Gas: true
+  MW_g: 95.10
+C2H3O3S:
+  Formula: HOOCH2SCO
+  FullName: organosulfur radical
+  Is_Gas: true
+  MW_g: 107.11
+C2H6SCl:
+  Formula: (CH3)2S(Cl)
+  FullName: Chlorinated DMS
+  Is_Gas: true
+  MW_g: 97.58
+C2H5SO:
+  Formula: CH3SCH2(O)
+  FullName: oxo ion from DMS
+  Is_Gas: true
+  MW_g: 78.13
+MS:
+  Formula: CH3S
+  FullName: methanethiolate
+  Is_Gas: true
+  MW_g: 47.10
+MSO:
+  Formula: CH3S(O)
+  FullName: methylsulfinyl
+  Is_Gas: true
+  MW_g: 63.09
+MSOO:
+  Formula: CH3S(OO)
+  FullName: methanesulfinate radical
+  Is_Gas: true
+  MW_g: 79.09
+MSO2:
+  Formula: CH3SO2
+  FullName: methanesulfinate
+  Is_Gas: true
+  MW_g: 79.09
+MSO3:
+  Formula: CH3SO3
+  FullName: methanesulfonate
+  Is_Gas: true
+  MW_g: 95.09
+C2H6O4S:
+  Formula: HOOCH2SCH2OOH
+  FullName: organosulfur radical
+  Is_Gas: true
+  MW_g: 126.12
+LOH:
+  FullName: Dummy species to track loss rate of OH
+  Is_Gas: true
+  MW_g: 17.01
+  KPP_AbsTol: 1.0e+25
+LNO3:
+  FullName: Dummy species to track loss rate of NO3
+  Is_Gas: true
+  MW_g: 62.01
+  KPP_AbsTol: 1.0e+25
+LCl:
+  FullName: Dummy species to track loss rate of Cl
+  Is_Gas: true
+  MW_g: 35.45
+  KPP_AbsTol: 1.0e+25
+LBrO:
+  FullName: Dummy species to track loss rate of BrO
+  Is_Gas: true
+  MW_g: 95.90
+  KPP_AbsTol: 1.0e+25
+LHO2:
+  FullName: Dummy species to track loss rate of HO2
+  Is_Gas: true
+  MW_g: 33.01
+  KPP_AbsTol: 1.0e+25
+LMO2:
+  FullName: Dummy species to track loss rate of MO2
+  Is_Gas: true
+  MW_g: 47.04
+  KPP_AbsTol: 1.0e+25
+LNO:
+  FullName: Dummy species to track loss rate of NO
+  Is_Gas: true
+  MW_g: 30.01
+  KPP_AbsTol: 1.0e+25
+LDMS:
+  FullName:  Dummy species to track loss rate of DMS
+  Is_Aerosol: true
+  MW_g: 62.13
+  KPP_AbsTol: 1.0e+25
+PDMSO:
+  FullName:  Dummy species to track production rate of DMSO
+  Is_Aerosol: true
+  MW_g: 78.13
+  KPP_AbsTol: 1.0e+25
+LDMSO:
+  FullName:  Dummy species to track loss rate of DMSO
+  Is_Aerosol: true
+  MW_g: 78.13
+  KPP_AbsTol: 1.0e+25
+PMSIA:
+  FullName:  Dummy species to track production rate of MSIA
+  Is_Aerosol: true
+  MW_g: 80.10
+  KPP_AbsTol: 1.0e+25
+LMSIA:
+  FullName:  Dummy species to track loss rate of MSIA
+  Is_Aerosol: true
+  MW_g: 80.10
+  KPP_AbsTol: 1.0e+25
+PMSA:
+  FullName:  Dummy species to track production rate of MSA
+  Is_Aerosol: true
+  MW_g: 96.10
+  KPP_AbsTol: 1.0e+25
+PSO2:
+  FullName:  Dummy species to track production rate of SO2
+  Is_Gas: true
+  MW_g: 64.04
+  KPP_AbsTol: 1.0e+25
+LSO2:
+  FullName:  Dummy species to track loss rate of SO2
+  Is_Gas: true
+  MW_g: 64.04
+  KPP_AbsTol: 1.0e+25
+LSO4:
+  FullName:  Dummy species to track loss rate of SO4
+  Is_Gas: true
+  MW_g: 96.06
+  KPP_AbsTol: 1.0e+25
+PH2SO4:
+  FullName: Dummy species to track H2SO4 production reactions
+  Is_Gas: true
+  MW_g: 96.06
+  KPP_AbsTol: 1.0e+25
+PRXN_DMSOHadd:
+  FullName: Dummy species to track DMS + OH addition reaction "production rate"
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+PRXN_DMSOHabstr:
+  FullName: Dummy species to track DMS + OH abstraction reaction "production rate"
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+PRXN_DMSNO3:
+  FullName: Dummy species to track DMS + NO3 reaction "production rate"
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+PRXN_DMSCl:
+  FullName: Dummy species to track DMS + Cl reaction "production rate"
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+PRXN_DMSBrO:
+  FullName: Dummy species to track DMS + BrO reaction "production rate"
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+PRXN_DMSO3:
+  FullName: Dummy species to track DMS + O3 reaction "production rate"
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+PRXN_DMSOOH:
+  FullName: Dummy species to track DMSO + OH reaction "production rate"
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+PRXN_MSIAOH:
+  FullName: Dummy species to track MSIA + OH reaction "production rate"
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+PRXN_MSIAO3:
+  FullName: Dummy species to track MSIA + O3 reaction "production rate"
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+PRXN_DMSClabs:
+  FullName: Dummy species to track DMS + Cl abstraction reaction "production rate"
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+PRXN_C2H6SCl:
+  FullName: Dummy species to track DMS formation from C2H6SCl reaction "production rate"
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+PRXN_DMSNO3_MSP:
+  FullName: Dummy species to track MSP formation from DMS + NO3 reaction "production rate"
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+PRXN_MSO3_MSA:
+  FullName: Dummy species to track MSA formation from MSO3 reaction "production rate"
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+PRXN_Form_HPMTF:
+  FullName: Dummy species to track HPMTF formation reaction "production rate"
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+PRXN_HPMTFOH:
+  FullName: Dummy species to track HPMTF + OH reaction "production rate"
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+PRXN_DMSO3_aq:
+  FullName: Dummy species to track DMS + O3 aq reaction "production rate"
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+PRXN_DMSOOH_aq:
+  FullName: Dummy species to track DMSO + OH aq reaction "production rate"
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+PRXN_MSIAOH_aq:
+  FullName: Dummy species to track MSIA + OH aq reaction "production rate"
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+PRXN_MSIAO3_aq:
+  FullName: Dummy species to track MSIA + O3 aq reaction "production rate"
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+PRXN_MSAOH_aq:
+  FullName: Dummy species to track MSA + OH aq reaction "production rate"
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+PRXN_HPMTF_cld:
+  FullName: Dummy species to track HPMTF + Cloud reaction "production rate"
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+PRXN_HPMTF_aero:
+  FullName: Dummy species to track HPMTF + Aerosol reaction "production rate"
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+PRXN_MSO:
+  FullName: Dummy species to track MSO + O3 reaction "production rate"
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+PRXN_MSOO:
+  FullName: Dummy species to track MSOO decomposition reaction "production rate"
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+PRXN_MSO2:
+  FullName: Dummy species to track MSO2 decomposition reaction "production rate"
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+PRXN_MO3SO3:
+  FullName: Dummy species to track MO3S + O3 reaction "production rate"
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+PRXN_MO3SNO2:
+  FullName: Dummy species to track MO3S + NO2 reaction "production rate"
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+RXN_SO2OH:
+  FullName: Dummy species to track SO2 + OH
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+RXN_MSO3:
+  FullName: Dummy species to track MSO3
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+RXN_DMSOHadd:
+  FullName: Dummy species to track DMS + OH addition reaction
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+RXN_DMSOHabstr:
+  FullName: Dummy species to track DMS + OH abstraction reaction
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+RXN_DMSNO3:
+  FullName: Dummy species to track DMS + NO3 reaction
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+RXN_DMSCl:
+  FullName: Dummy species to track DMS + Cl reaction
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+RXN_DMSBrO:
+  FullName: Dummy species to track DMS + BrO reaction
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+RXN_DMSO3:
+  FullName: Dummy species to track DMS + O3 reaction
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+RXN_DMSOOH:
+  FullName: Dummy species to track DMSO + OH reaction
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+RXN_MSIAOH:
+  FullName: Dummy species to track MSIA + OH reaction
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+RXN_MSIAO3:
+  FullName: Dummy species to track MSIA + O3 reaction
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+RXN_DMSClabs:
+  FullName: Dummy species to track DMS + Cl abstraction reaction
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+RXN_C2H6SCl:
+  FullName: Dummy species to track DMS formation from C2H6SCl reaction
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+RXN_DMSNO3_MSP:
+  FullName: Dummy species to track MSP formation from DMS + NO3 reaction
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+RXN_MSO3_MSA:
+  FullName: Dummy species to track MSA formation from MSO3 reaction
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+RXN_Form_HPMTF:
+  FullName: Dummy species to track HPMTF formation reaction
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+RXN_HPMTFOH:
+  FullName: Dummy species to track HPMTF + OH reaction
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+RXN_DMSO3_aq:
+  FullName: Dummy species to track DMS + O3 aq reaction
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+RXN_DMSOOH_aq:
+  FullName: Dummy species to track DMSO + OH aq reaction
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+RXN_MSIAOH_aq:
+  FullName: Dummy species to track MSIA + OH aq reaction
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+RXN_MSIAO3_aq:
+  FullName: Dummy species to track MSIA + O3 aq reaction
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+RXN_MSAOH_aq:
+  FullName: Dummy species to track MSA + OH aq reaction
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+RXN_HPMTF_aero:
+  FullName: Dummy species to track HPMTF + Aerosol reaction
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+RXN_HPMTF_cld:
+  FullName: Dummy species to track HPMTF + Cloud reaction
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+RXN_MSO:
+  FullName: Dummy species to track MSO + O3 reaction
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+RXN_MSOO:
+  FullName: Dummy species to track MSOO decomposition reaction
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+RXN_MSO2:
+  FullName: Dummy species to track MSO2 decomposition reaction
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+RXN_MO3SO3:
+  FullName: Dummy species to track MO3S + O3 reaction
+  Is_Gas: true
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25
+RXN_MO3SNO2:
+  FullName: Dummy species to track MO3S + NO2 reaction
+  Is_Gas: true  
+  MW_g: 1
+  KPP_AbsTol: 1.0e+25

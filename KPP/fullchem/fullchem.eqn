@@ -472,6 +472,52 @@ XRO2       = IGNORE; {Peroxy radical from XYLE oxidation}
 PH2SO4     = IGNORE; {SO4 from gas-phase chemistry}
 PSO4AQ     = IGNORE; {SO4 from cloud chemistry}
 ZRO2       = IGNORE; {Lumped RO2 from aromatics}
+DMSO       = IGNORE; {(CH3)2SO; Dimethyl sulfoxide}
+MSIA       = IGNORE; {CH3SO2H; Methane sulphinic acid}
+HPMTF      = IGNORE; {HOOCH2SCHO; hydrperoxymethyl thioformate}
+MSP        = IGNORE; {CH3SCH2OO; methylthiomethylperoxy radical}
+MSPO2      = IGNORE; {OOCH2SCH2OOH; organosulfur radical}
+C2H5O3S    = IGNORE; {HOOCH2SCH2O; organosulfur radical}
+MO2S       = IGNORE; {HOOCH2S; organosulfur radical}
+MO3S       = IGNORE; {HOOCH2SO; organosulfur radical}
+C2H3O3S    = IGNORE; {HOOCH2SCO; organosulfur radical}
+C2H6O4S    = IGNORE; {HOOCH2SCH2OOH; organosulfur radical}
+C2H6SCl    = IGNORE; {(CH3)2S(Cl); Chlorinated DMS}
+C2H5SO     = IGNORE; {CH3SCH2(O); oxo ion from DMS}
+MS         = IGNORE; {CH3S; methanethiolate}
+MSO        = IGNORE; {CH3S(O); methylsulfinyl}
+MSOO       = IGNORE; {CH3S(OO); methanesulfinate radical}
+MSO2       = IGNORE; {CH3SO2; methanesulfinate}
+MSO3       = IGNORE; {CH3SO3; methanesulfonate}
+RXN_DMSOHabstr = IGNORE; {RXN_DMSOHabstr; DMS + OH abstraction reaction}
+RXN_DMSOHadd   = IGNORE; {RXN_DMSOHadd; DMS + OH addition reaction}
+RXN_DMSNO3     = IGNORE; {RXN_DMSNO3; DMS + NO3 reaction}
+RXN_DMSBrO     = IGNORE; {RXN_DMSBrO; DMS + BrO reaction}
+RXN_DMSO3      = IGNORE; {RXN_DMSO3; DMS + O3 reaction}
+RXN_DMSCl      = IGNORE; {RXN_DMSCl; DMS + Cl reaction}
+RXN_DMSOOH     = IGNORE; {RXN_DMSOOH; DMSO + OH reaction}
+RXN_MSIAOH     = IGNORE; {RXN_MSIAOH; MSIA + OH reaction}
+RXN_MSIAO3     = IGNORE; {RXN_MSIAO3; MSIA + O3 reaction}
+RXN_DMSClabs   = IGNORE; {RXN_DMSClabs; DMS + Cl abstraction reaction}
+RXN_C2H6SCl    = IGNORE; {RXN_C2H6SCl; C2H6SCl forming DMS}
+RXN_DMSNO3_MSP = IGNORE; {RXN_DMSNO3_MSP; DMS + NO3 forming MSP}
+RXN_MSO3_MSA   = IGNORE; {RXN_MSO3_MSA; MSO3 forming MSA}
+RXN_Form_HPMTF = IGNORE; {RXN_Form_HPMTF; MSPO2 forming HPMTF}
+RXN_HPMTFOH    = IGNORE; {RXN_HPMTFOH; HPMTF + OH reaction}
+RXN_DMSO3_aq   = IGNORE; {RXN_DMSO3_aq; DMS + O3 aq reaction}
+RXN_DMSOOH_aq  = IGNORE; {RXN_DMSOOH_aq; DMSO + OH aq reaction}
+RXN_MSIAOH_aq  = IGNORE; {RXN_MSIAOH_aq; MSIA + OH aq reaction}
+RXN_MSIAO3_aq  = IGNORE; {RXN_MSIAO3_aq; MSIA + O3 aq reaction}
+RXN_MSAOH_aq   = IGNORE; {RXN_MSAOH_aq; MSA + OH aq reaction}
+RXN_HPMTF_aero = IGNORE; {RXN_HPMTF_aero; HPMTF + Aerosol = SO4 reaction}
+RXN_HPMTF_cld  = IGNORE; {RXN_HPMTF_cld; HPMTF + Cloud = SO4 reaction}
+RXN_MSO        = IGNORE; {RXN_MSO; MSO + O3 reaction}
+RXN_MSOO       = IGNORE; {RXN_MSOO; MSOO decomposition reaction}
+RXN_MSO2       = IGNORE; {RXN_MSO2; MSO2 decomposition reaction}
+RXN_MO3SO3     = IGNORE; {RXN_MO3SO3; MO3S + O3 reaction}
+RXN_MO3SNO2    = IGNORE; {RXN_MO3SNO2; MO3S + NO2 reaction}
+RXN_SO2OH      = IGNORE; {RXN_OHSO2; OH + SO2 for H2SO4 prod in TOMAS}
+RXN_MSO3       = IGNORE; {RXN_MSO3; MSO3 reaction for H2SO4 prod in TOMAS}
 #DEFFIX
 
 H2         = IGNORE; {H2; Molecular hydrogen}
@@ -815,10 +861,51 @@ RCO3 + MO2 = CH2O + CO2 + HO2 +
 NO3 + NO3 = 2.000NO2 + O2 :                  GCARR_ac(8.50d-13, -2450.0d0);
 MO2 + NO2 {+M} = MPN {+M} :                  GCJPLPR_abab(1.00d-30, 4.8d+00, 7.2d-12, 2.1d0, 0.6d0);                           {2012/02/12; Browne2011; ECB}
 MPN {+M} = MO2 + NO2 :                       GCJPLPR_abcabc(1.05d-02, 4.8d+00, -11234.0d0, 7.58d16, 2.1d0, -11234.0d0, 0.6d0); {2012/02/12; Browne2011; ECB}
-DMS + OH = SO2 + MO2 + CH2O :                GCARR_ac(1.20d-11, -280.0d0);
-DMS + OH = 0.750SO2 + 0.250MSA + MO2 :       GC_DMSOH_acac(8.20d-39, 5376.0d0, 1.05d-5, 3644.0d0);
-DMS + NO3 = SO2 + HNO3 + MO2 + CH2O :        GCARR_ac(1.90d-13, 530.0d0);
-SO2 + OH {+M} = SO4 + HO2 + PH2SO4 :         GCJPLPR_abab(2.90d-31, 4.1d+00, 1.7d-12, -0.2d0, 0.6d0);                          {2023/04/18; JPL 19-5; KHB}
+DMS + OH = 0.60SO2 + 0.4DMSO + MO2 +
+ RXN_DMSOHadd :                              GC_DMSOH_acac(8.20E-39, 5376.0, 1.05E-5, 3644.0);
+DMS + NO3 = SO2 + HNO3 + MO2 + CH2O +
+ RXN_DMSNO3 :                                GCARR_ac(1.90E-13, 530.0);
+DMS + BrO = DMSO + Br + RXN_DMSBrO :         GCARR_ac(1.40E-14, 950.0);
+DMS + O3 = SO2 + RXN_DMSO3 :                 GCARR_ac(1.00E-19, 0.0);
+DMS + Cl = 0.5SO2 + 0.5DMSO +
+ 0.5HCl + 0.5ClO + RXN_DMSCl :               GCARR_ac(3.40E-10, 0.0);
+DMSO + OH = 0.95MSIA + 0.05SO2 +
+ RXN_DMSOOH :                                GCARR_ac(6.10E-12, 800.0);
+MSIA + OH = 0.9SO2 + 0.1MSA +
+ RXN_MSIAOH :                                GCARR_ac(9.00E-11, 0.0);
+MSIA + O3 = MSA + RXN_MSIAO3 :               GCARR_ac(2.00E-18, 0.0);
+DMS + OH = MSP + H2O + RXN_DMSOHabstr :      GCARR_ac(1.12E-11, -250.0);
+DMS + Cl = 0.45MSP + 0.55C2H6SCl +
+ 0.45HCl + RXN_DMSClabs :                    GCARR_ac(3.40E-10, 0.0);
+C2H6SCl = DMS + Cl + RXN_C2H6SCl :           GCARR_ac(9.00E+01, 0.0);
+DMS + NO3 = MSP + HNO3 + RXN_DMSNO3_MSP :    GCARR_ac(1.90E-13, 520.0);
+MSP + NO = C2H5SO + NO2 :                    GCARR_ac(4.90E-12, 260.0);
+MSP + MO2 = C2H5SO + O2 :                    GCARR_ac(3.74E-12, 0.0);
+C2H5SO = MS + CH2O :                         GCARR_ac(1.00E+06, 0.0);
+MS + O3 = MSO + O2 :                         GCARR_ac(1.15E-12, 430.0);
+MS + O2 = MSOO :                             GCARR_ac(1.20E-16, 1580.0);
+MSO + O3 = MO2 + SO2 + RXN_MSO :             GCARR_ac(4.00E-13, 0.0);
+MSOO = MO2 + SO2 + RXN_MSOO :                GCARR_ac(5.60E+16, -10870.0);
+MSOO = MSO2 :                                GCARR_ac(1.00E+00, 0.0);
+MSO2 + O3 = MSO3 + O2 :                      GCARR_ac(3.00E-13, 0.0);
+MSO2 = MO2 + SO2 + RXN_MSO2 :                GCARR_ac(5.00E+13, -9673.0);
+MSO3 + HO2 = MSA + O2 + RXN_MSO3_MSA :       GCARR_ac(5.00E-11, 0.0);
+MSO3 = MO2 + SO4 + RXN_MSO3 :                GCARR_ac(5.00E+13, -9946.0);
+MSP = MSPO2 :                                TUN_abc(2.243E+11, -9801.6, 1.0348E+08);
+MSPO2 = HPMTF + OH + RXN_Form_HPMTF :        TUN_abc(6.097E+11, -9489.6, 1.1028E+08);
+MSPO2 + NO = C2H5O3S + NO2 :                 GCARR_ac(4.90E-12, 260.0);
+C2H5O3S = MO2S + CH2O :                      GCARR_ac(1.00E+06, 0.0);
+MSPO2 + HO2 = C2H6O4S + O2 :                 GCARR_ac(1.13E-13, 1300.0);
+HPMTF + OH = C2H3O3S + H2O + RXN_HPMTFOH :   GCARR_ac(1.110E-11, 0.0);
+C2H3O3S = MO2S + CO :                        GCARR_ac(9.20E+09, -505.4);
+C2H3O3S = OH + CH2O + SO2 :                  GCARR_ac(1.60E+07, -1468.6);
+MO2S + O3 = MO3S + O2 :                      GCARR_ac(1.15E-12, 430.0);
+MO2S + NO2 = MO3S + NO :                     GCARR_ac(6.00E-11, 240.0);
+MO3S + O3 = SO2 + CH2O + OH + O2 +
+ RXN_MO3SO3 :                                GCARR_ac(4.00E-13, 0.0);
+MO3S + NO2 = SO2 + CH2O + OH + NO +
+ RXN_MO3SNO2 :                               GCARR_ac(1.20E-11, 0.0);
+SO2 + OH {+M} = SO4 + HO2 + RXN_SO2OH :      GCJPLPR_abab(3.30E-31, 4.3E+00, 1.6E-12, 0.0, 0.6);
 Br + O3 = BrO + O2 :                         GCARR_ac(1.60d-11, -780.0d0);                                                     {2012/06/07; Parrella2012; JPP}
 BrO + HO2 = HOBr + O2 :                      GCARR_ac(4.50d-12, 460.0d0);                                                      {2012/06/07; Parrella2012; JPP}
 Br + HO2 = HBr + O2 :                        GCARR_ac(4.80d-12, -310.0d0);                                                     {2012/06/07; Parrella2012; JPP}
@@ -1691,6 +1778,13 @@ FURA + OH = BUTDI :                          GCARR_ac(1.32d-11, 334.0d0);       
 // %%%%% Heterogeneous chemistry reactions                               %%%%%
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //
+DMS + O3 = DMSO + O2 + RXN_DMSO3_aq :  O3uptkByDMS( State_Het );
+DMSO + OH = MSIA + RXN_DMSOOH_aq :     OHuptkByDMSO( State_Het );
+MSIA + OH = MSA + RXN_MSIAOH_aq :      OHuptkByMSIA( State_Het );
+MSIA + O3 = MSA + RXN_MSIAO3_aq :      O3uptkByMSIA( State_Het );
+MSA + OH = SO4 + RXN_MSAOH_aq :        OHuptkByMSA( State_Het );
+HPMTF = SO4 + RXN_HPMTF_aero :         HPMTFuptkAero( State_Het );                                          {HPMTF aerosol loss}
+HPMTF = SO4 + RXN_HPMTF_cld :          HPMTFuptkCld( State_Het );                                           {HPMTF cloud loss}
 HO2 = H2O :                    HO2uptk1stOrd( State_Het );                                                  {2013/03/22; Paulot2009; FP,EAM,JMAO,MJE}
 NO2 = 0.500HNO3 + 0.500HNO2 :  NO2uptk1stOrdAndCloud( State_Het );
 NO3 = HNO3 :                   NO3uptk1stOrdAndCloud( State_Het );

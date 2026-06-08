@@ -398,6 +398,9 @@ operations:
       - TMB
       - TOLU
       - XYLE
+      - DMSO
+      - MSIA
+      - HPMTF
 
   wet_deposition:
     activate: true
